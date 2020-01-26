@@ -7,7 +7,7 @@ feature 'User can fill form answer', %q{
 }do
 
   given(:user) { create(:user) }
-  given(:question) { create(:question) }
+  given(:question) { create(:question, user: user) }
 
   scenario 'Authenticated user fill in form on page question' do
     sign_in(user)

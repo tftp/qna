@@ -6,8 +6,8 @@ feature 'User can show question with his answers', %q{
 }do
 
   given(:user) { create(:user) }
-  given(:question) { create(:question) }
-  given!(:answer) { question.answers.create( body: 'MyAnswer' ) }
+  given(:question) { create(:question, user: user) }
+  given!(:answer) { create(:answer, question: question, user: user) }
 
   #background { visit question_path }
 
