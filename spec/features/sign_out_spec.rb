@@ -13,6 +13,7 @@ feature 'User can sign out', %q{
     click_on 'Log Out'
     expect(page).to have_content 'Signed out successfully.'
   end
+  
   scenario 'Unregistered user tries to sign out' do
     visit root_path
     expect(page).not_to have_selector(:link_or_button, 'Log Out')

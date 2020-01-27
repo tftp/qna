@@ -14,6 +14,7 @@ feature 'User can fill form answer', %q{
     visit "/questions/#{question.id}"
     fill_in 'Body', with: 'NewAnswer'
     click_on 'Reply'
+    #save_and_open_page
 
     expect(page).to have_content 'NewAnswer'
     expect(page).to have_content 'Your answer successfully created'
@@ -21,9 +22,8 @@ feature 'User can fill form answer', %q{
 
   scenario 'Authenticated user fill in form on page question with errors' do
     sign_in(user)
-    visit "/questions/#{question.id}"
+    visit question_path(question)
     click_on 'Reply'
-    #save_and_open_page
 
     expect(page).to have_content "Body can't be blank"
   end

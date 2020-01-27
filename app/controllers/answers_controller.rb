@@ -12,13 +12,13 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to @question, notice: 'Your answer successfully created'
     else
-      render :new
+      render 'questions/show'
     end
   end
 
   def destroy
     @answer = Answer.find(params[:id])
-    @answer.destroy if @answer.user == current_user
+    @answer.destroy if @answer.has_author?(current_user)
     redirect_to question_answers_path
   end
 

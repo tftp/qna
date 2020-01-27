@@ -12,12 +12,16 @@ feature 'User can show list of questions', %q{
     sign_in(user)
     visit questions_path
 
-    expect(page).to have_content 'MyString'
+    questions.each do |question|
+      expect(page).to have_content question.title
+    end
   end
 
   scenario 'Unauthenticated user can show list questions' do
     visit questions_path
 
-    expect(page).to have_content 'MyString'
+    questions.each do |question|
+      expect(page).to have_content question.title
+    end
   end
 end

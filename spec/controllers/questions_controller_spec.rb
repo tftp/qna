@@ -27,31 +27,54 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
-    before { login(author) }
 
-    before { get :new }
+    context 'as not authenticate user' do
+      before { login(author) }
+      before { get :new }
 
-    it 'renders new view' do
-      expect(response).to render_template :new
+      it 'renders new view' do
+        expect(response).to render_template :new
+      end
     end
+
+    context 'as not unauthenticate user' do
+      before { get :new }
+
+      it "redirect to sign in page" do
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
   end
 
   describe 'GET #edit' do
-    before { login(author) }
-    before { get :edit, params: { id: question } }
+    context 'as authenticate user' do
+      before { login(author) }
+      before { get :edit, params: { id: question } }
 
-    it 'renders edit view' do
-      expect(response).to render_template :edit
+      it 'renders edit view' do
+        expect(response).to render_template :edit
+      end
     end
+
+    context 'as not authenticate user' do
+      before { get :edit, params: { id: question } }
+
+      it 'redirect to sign in page' do
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
   end
 
   describe 'POST #create' do
-    before { login(author) }
-
     context 'with valid attributes' do
+      before { login(author) }
+
       it 'saves a new question in the database' do
         expect{post :create, params: { question: attributes_for(:question), user_id: author }}.to change(Question, :count).by(1)
       end
+
       it 'redirect to show view' do
         post :create, params: { question: attributes_for(:question), user_id: author }
         expect(response).to redirect_to assigns(:question)
@@ -59,44 +82,85 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid attributes' do
+      before { login(author) }
+
       it 'does not save the question' do
         expect{post :create, params: { question: attributes_for(:question, :invalid), user_id: author }}.to_not change(Question, :count)
       end
+
       it 're-render new view' do
         post :create, params: { question: attributes_for(:question, :invalid), user_id: author }
         expect(response).to render_template :new
       end
     end
+
+    context 'as unauthenticate user' do
+      it 'does not create the question' do
+        expect{post :create, params: { question: attributes_for(:question), user_id: author }}.to_not change(Question, :count)
+      end
+
+      it 'redirect to sign in page' do
+        post :create, params: { question: attributes_for(:question), user_id: author }
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
   end
 
   describe 'PATCH #update' do
-    before { login(user) }
     context 'with valid attributes' do
+      before { login(user) }
+
       it 'assigns the requested question to @question' do
         patch :update, params: { id: question, question: attributes_for(:question) }
         expect { assigns(:question).to eq question }
       end
+
       it 'changes question attributes' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body'} }
         question.reload
         expect(question.title).to eq 'new title'
         expect(question.body).to eq 'new body'
       end
+
       it 'redirect to update question' do
         patch :update, params: { id: question, question: attributes_for(:question) }
         expect(response).to redirect_to question
       end
     end
+
     context 'with invalid attributes'do
+      before { login(user) }
       before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
+
       it 'does not change question' do
         question.reload
-
         expect(question.title).to_not eq nil
         expect(question.body).to eq 'MyText'
       end
+
       it 'render edit view' do
         expect(response).to render_template :edit
+      end
+    end
+
+    context 'as unauthenticate user'do
+
+      it 'not assigns the requested question to @question' do
+        patch :update, params: { id: question, question: attributes_for(:question) }
+        expect { assigns(:question).to_not eq question }
+      end
+
+      it 'does not change question' do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body'} }
+        question.reload
+        expect(question.title).to_not eq 'new title'
+        expect(question.body).to_not eq 'new body'
+      end
+
+      it 'redirect to sign in page' do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body'} }
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end
@@ -129,6 +193,18 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to questions_path
       end
     end
-  end
 
+    context 'as not authenticate user' do
+
+      it "can't deletes the question" do
+        expect{delete :destroy, params: { id: question }}.to_not change(Question, :count)
+      end
+
+      it 'redirect to sign in page' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+  end
 end

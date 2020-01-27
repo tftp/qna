@@ -7,26 +7,26 @@ feature 'User can show question with his answers', %q{
 
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
-  given!(:answer) { create(:answer, question: question, user: user) }
-
-  #background { visit question_path }
+  given!(:answers) { create_list(:answer, 2, question: question, user: user) }
 
   scenario 'Authenticated user can show question and his answers' do
-    #question.answers.create(body: 'MyAnswer')
     sign_in(user)
-    visit "/questions/#{question.id}"
-    #save_and_open_page
+    visit visit question_path(question)
+
     expect(page).to have_content 'MyString'
     expect(page).to have_content 'MyText'
-    expect(page).to have_content 'MyAnswer'
-
+    answers.each do |answer|
+      expect(page).to have_content answer.body
+    end
   end
 
   scenario 'Unauthenticated user can show question and his answers' do
-    visit "/questions/#{question.id}"
-    #save_and_open_page
+    visit question_path(question)
+
     expect(page).to have_content 'MyString'
     expect(page).to have_content 'MyText'
-    expect(page).to have_content 'MyAnswer'
+    answers.each do |answer|
+      expect(page).to have_content answer.body
+    end
   end
 end
