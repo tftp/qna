@@ -22,6 +22,7 @@ RSpec.describe User, type: :model do
       expect(author.is_author?(self_answer)).to eq true
     end
   end
+
   describe 'is not author' do
     it 'somebody question' do
       expect(author.is_author?(somebody_question)).to eq false
@@ -30,6 +31,5 @@ RSpec.describe User, type: :model do
     it 'somebody answer' do
       expect(author.is_author?(somebody_answer)).to eq false
     end
-
   end
 end

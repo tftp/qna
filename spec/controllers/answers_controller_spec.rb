@@ -34,13 +34,13 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #create' do
-
     context 'with valid attributes' do
       before { login(author) }
 
       it 'saves a new answer in the database' do
         expect{post :create, params: { answer: attributes_for(:answer), question_id: question }}.to change(question.answers, :count).by(1)
       end
+
       it 'redirect to show question view' do
         post :create, params: { answer: attributes_for(:answer), question_id: question }
         expect(response).to redirect_to question
@@ -53,6 +53,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not save the question' do
         expect{post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }}.to_not change(Answer, :count)
       end
+
       it 're-render new view' do
         post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }
         expect(response).to render_template 'questions/show'
@@ -112,7 +113,5 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to redirect_to new_user_session_path
       end
     end
-
   end
-
 end

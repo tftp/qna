@@ -8,12 +8,12 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2, user: author) }
-
     before { get :index }
 
     it 'populates an array of all questions' do
       expect(assigns(:questions)).to match_array(questions)
     end
+
     it 'renders index views' do
       expect(response).to render_template :index
     end
@@ -28,7 +28,6 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
-
     context 'as not authenticate user' do
       before { login(author) }
       before { get :new }
@@ -45,7 +44,6 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to new_user_session_path
       end
     end
-
   end
 
   describe 'GET #edit' do
@@ -65,7 +63,6 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to new_user_session_path
       end
     end
-
   end
 
   describe 'POST #create' do
@@ -73,11 +70,11 @@ RSpec.describe QuestionsController, type: :controller do
       before { login(author) }
 
       it 'saves a new question in the database' do
-        expect{post :create, params: { question: attributes_for(:question), user_id: author }}.to change(Question, :count).by(1)
+        expect{post :create, params: { question: attributes_for(:question) }}.to change(Question, :count).by(1)
       end
 
       it 'redirect to show view' do
-        post :create, params: { question: attributes_for(:question), user_id: author }
+        post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to assigns(:question)
       end
     end
@@ -86,26 +83,25 @@ RSpec.describe QuestionsController, type: :controller do
       before { login(author) }
 
       it 'does not save the question' do
-        expect{post :create, params: { question: attributes_for(:question, :invalid), user_id: author }}.to_not change(Question, :count)
+        expect{post :create, params: { question: attributes_for(:question, :invalid) }}.to_not change(Question, :count)
       end
 
       it 're-render new view' do
-        post :create, params: { question: attributes_for(:question, :invalid), user_id: author }
+        post :create, params: { question: attributes_for(:question, :invalid) }
         expect(response).to render_template :new
       end
     end
 
     context 'as unauthenticate user' do
       it 'does not create the question' do
-        expect{post :create, params: { question: attributes_for(:question), user_id: author }}.to_not change(Question, :count)
+        expect{post :create, params: { question: attributes_for(:question) }}.to_not change(Question, :count)
       end
 
       it 'redirect to sign in page' do
-        post :create, params: { question: attributes_for(:question), user_id: author }
+        post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to new_user_session_path
       end
     end
-
   end
 
   describe 'PATCH #update' do
@@ -206,6 +202,5 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to new_user_session_path
       end
     end
-
   end
 end

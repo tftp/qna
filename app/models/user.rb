@@ -10,7 +10,7 @@ class User < ApplicationRecord
  validates :email, format: { with: /\A\w+@\w+\.[a-z]{2,3}\z/}
 
  def is_author?(obj)
-   answers.include?(obj) || questions.include?(obj)
+   id == obj.user_id
  end
- 
+
 end
