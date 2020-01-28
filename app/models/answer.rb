@@ -4,7 +4,4 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
-  def has_author?(user)
-    self.user == user
-  end
 end

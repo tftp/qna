@@ -8,5 +8,9 @@ class User < ApplicationRecord
  has_many :answers
 
  validates :email, format: { with: /\A\w+@\w+\.[a-z]{2,3}\z/}
+
+ def is_author?(obj)
+   answers.include?(obj) || questions.include?(obj)
+ end
  
 end

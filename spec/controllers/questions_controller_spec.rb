@@ -4,6 +4,7 @@ RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
   let(:author) { create(:user) }
   let(:question) { create(:question, user: author) }
+  let(:question_old) { question }
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2, user: author) }
@@ -135,8 +136,8 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'does not change question' do
         question.reload
-        expect(question.title).to_not eq nil
-        expect(question.body).to eq 'MyText'
+        expect(question.title).to eq question_old.title
+        expect(question.body).to eq question_old.body
       end
 
       it 'render edit view' do
@@ -154,8 +155,8 @@ RSpec.describe QuestionsController, type: :controller do
       it 'does not change question' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body'} }
         question.reload
-        expect(question.title).to_not eq 'new title'
-        expect(question.body).to_not eq 'new body'
+        expect(question.title).to eq question_old.title
+        expect(question.body).to eq question_old.body
       end
 
       it 'redirect to sign in page' do

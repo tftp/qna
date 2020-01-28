@@ -3,4 +3,5 @@ p= @question.body
 
 = render @question.answers
 
-= render 'answers/form'
+-if user_signed_in?
+  = render 'answers/form'
