@@ -73,6 +73,11 @@ RSpec.describe QuestionsController, type: :controller do
         expect{post :create, params: { question: attributes_for(:question) }}.to change(Question, :count).by(1)
       end
 
+      it 'question have valid author' do
+        post :create, params: { question: attributes_for(:question) }
+        expect(assigns(:question).user).to eq author
+      end
+
       it 'redirect to show view' do
         post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to assigns(:question)

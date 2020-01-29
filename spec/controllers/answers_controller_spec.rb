@@ -41,6 +41,11 @@ RSpec.describe AnswersController, type: :controller do
         expect{post :create, params: { answer: attributes_for(:answer), question_id: question }}.to change(question.answers, :count).by(1)
       end
 
+      it 'answer have valid author' do
+        post :create, params: { answer: attributes_for(:answer), question_id: question }
+        expect(assigns(:answer).user).to eq author
+      end
+
       it 'redirect to show question view' do
         post :create, params: { answer: attributes_for(:answer), question_id: question }
         expect(response).to redirect_to question

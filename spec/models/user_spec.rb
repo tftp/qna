@@ -15,21 +15,23 @@ RSpec.describe User, type: :model do
 
   describe 'is author ' do
     it 'self question' do
-        expect(author.is_author?(self_question)).to eq true
+        expect(author).to be_is_author(self_question)
     end
 
     it 'self answer' do
-      expect(author.is_author?(self_answer)).to eq true
+      expect(author).to be_is_author(self_answer)
     end
   end
 
   describe 'is not author' do
     it 'somebody question' do
-      expect(author.is_author?(somebody_question)).to eq false
+      expect(author).not_to be_is_author(somebody_question)
     end
 
     it 'somebody answer' do
-      expect(author.is_author?(somebody_answer)).to eq false
+      #можно я это оставлю в качестве примера преобразования?
+      #expect(author.is_author?(somebody_answer)).to eq false
+      expect(author).not_to be_is_author(somebody_answer)
     end
   end
 end
