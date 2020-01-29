@@ -1,1 +1,4 @@
-p= question.title
+p
+  = question.title
+  -if user_signed_in?
+    = for_author_question_add_link_delete(question)

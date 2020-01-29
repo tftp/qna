@@ -22,6 +22,7 @@ feature 'User can fill form answer', %q{
   scenario 'Authenticated user fill in form on page question with errors' do
     sign_in(user)
     visit question_path(question)
+    #save_and_open_page
     click_on 'Reply'
 
     expect(page).to have_content "Body can't be blank"
