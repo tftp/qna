@@ -13,6 +13,8 @@ feature 'User can delete question', %q{
   scenario 'Authenticated user can delete self question' do
     sign_in(author)
     visit questions_path
+
+    expect(page).to have_content question.title
     click_on 'Delete question'
 
     expect(page).to_not have_content question.title
