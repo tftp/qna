@@ -5,14 +5,21 @@ class AnswersController < ApplicationController
     @answer = Answer.new
   end
 
+  def update
+    @answer = Answer.find(params[:id])
+    @answer.update(answer_params)
+    @question = @answer.question
+  end
+
   def create
     @question = Question.find(params[:question_id])
+    #byebug
     @answer = current_user.answers.build(answer_params)
-    @answer.question = @question
+    @question.answers << @answer
+    @answer.save
 
-    if @answer.save
-      redirect_to @question, notice: 'Your answer successfully created'
-    end
+      #redirect_to @question, notice: 'Your answer successfully created'
+
   end
 
   def destroy

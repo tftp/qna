@@ -38,17 +38,17 @@ RSpec.describe AnswersController, type: :controller do
       before { login(author) }
 
       it 'saves a new answer in the database' do
-        expect{post :create, params: { answer: attributes_for(:answer), question_id: question }}.to change(question.answers, :count).by(1)
+        expect{post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :js }.to change(question.answers, :count).by(1)
       end
 
       it 'answer have valid author' do
-        post :create, params: { answer: attributes_for(:answer), question_id: question }
+        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js }
         expect(assigns(:answer).user).to eq author
       end
 
       it 'redirect to show question view' do
-        post :create, params: { answer: attributes_for(:answer), question_id: question }
-        expect(response).to redirect_to question
+        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js }
+        expect(response).to render_template :create
       end
     end
 
@@ -56,12 +56,12 @@ RSpec.describe AnswersController, type: :controller do
       before { login(author) }
 
       it 'does not save the question' do
-        expect{post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }}.to_not change(Answer, :count)
+        expect{post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :js }.to_not change(Answer, :count)
       end
 
       it 're-render new view' do
-        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }
-        expect(response).to render_template 'questions/show'
+        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question, format: :js }
+        expect(response).to render_template :create
       end
     end
 
@@ -116,6 +116,40 @@ RSpec.describe AnswersController, type: :controller do
       it 'redirect to sign in page' do
         delete :destroy, params: { id: answer, question_id: question }
         expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
+  describe 'PATH #update' do
+    let!(:answer) { create(:answer, question: question, user: author) }
+
+    context 'with valid attributes' do
+      before { login(author) }
+
+      it 'change answer attributes' do
+        patch :update, params: { id: answer, answer: { body: 'new body' }, question_id: answer.question }, format: :js
+        answer.reload
+        expect(answer.body).to eq 'new body'
+      end
+
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: { body: 'new body' }, question_id: answer.question }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with invalid attributes' do
+      before { login(author) }
+
+      it 'can not change attributes' do
+        expect do
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), question_id: answer.question }, format: :js
+        end.to_not change(answer, :body)
+      end
+
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), question_id: answer.question }, format: :js
+        expect(response).to render_template :update
       end
     end
   end
