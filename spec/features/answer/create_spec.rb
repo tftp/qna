@@ -9,7 +9,7 @@ feature 'User can fill form answer', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
 
-  scenario 'Authenticated user fill in form on page question' do
+  scenario 'Authenticated user fill in form on page question', js: true do
     sign_in(user)
     visit question_path(question)
     fill_in 'Body', with: 'NewAnswer'
@@ -19,16 +19,15 @@ feature 'User can fill form answer', %q{
     expect(page).to have_content 'Your answer successfully created'
   end
 
-  scenario 'Authenticated user fill in form on page question with errors' do
+  scenario 'Authenticated user fill in form on page question with errors', js: true do
     sign_in(user)
     visit question_path(question)
-    #save_and_open_page
     click_on 'Reply'
 
     expect(page).to have_content "Body can't be blank"
   end
 
-  scenario 'Unauthenticated user can not fill in form' do
+  scenario 'Unauthenticated user can not fill in form', js: true do
     visit question_path(question)
 
     expect(page).to_not have_content 'Body'
