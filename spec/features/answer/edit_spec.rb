@@ -6,9 +6,9 @@ feature 'User can edit his answer', %q{
   I'd like to be able to edit my answer
 }do
 
-  given(:user) { create(:user) }
-  given(:question) { create(:question, user: user) }
-  given!(:answer) { create(:answer, question: question, user: user) }
+  given(:author) { create(:user) }
+  given(:somebody) { create(:user) }
+  given(:question) { create(:question, user: somebody) }
 
   scenario 'Unauthenticated user can not edit answer' do
     visit question_path(question)
@@ -18,11 +18,11 @@ feature 'User can edit his answer', %q{
 
   describe 'Authenticated user' do
     scenario 'edit his answer', js: true do
-      sign_in(user)
+      answer = create(:answer, question: question, user: author)
+      sign_in(author)
       visit question_path(question)
 
       click_on 'Edit'
-
       within '.answers' do
         fill_in 'Your answer', with: 'edited answer'
         click_on 'Save'
@@ -33,7 +33,30 @@ feature 'User can edit his answer', %q{
       end
     end
 
-    scenario 'edit his answer with error'
-    scenario "tries edit other user's answers"
+    scenario 'edit his answer with error', js: true do
+      answer = create(:answer, question: question, user: author)
+      sign_in(author)
+      visit question_path(question)
+
+      click_on 'Edit'
+
+      within '.answers' do
+        fill_in 'Your answer', with: ' '
+        click_on 'Save'
+
+        expect(page).to have_content answer.body
+        expect(page).to_not have_selector 'text_area'
+      end
+      expect(page).to have_content "Body can't be blank"
+    end
+
+    scenario "tries edit other user's answers", js: true do
+      answer = create(:answer, question: question, user: somebody)
+      sign_in(author)
+      visit question_path(question)
+
+      expect(page).to have_content answer.body
+      expect(page).to_not have_link 'Edit'
+    end
   end
 end

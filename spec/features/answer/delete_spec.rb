@@ -13,7 +13,7 @@ feature 'User can delete answer', %q{
   scenario 'Authenticated user can delete self answer' do
     sign_in(author)
     visit question_path(question)
-    click_on 'Delete answer'
+    click_on 'Delete'
 
     expect(page).to_not have_content answer.body
   end
