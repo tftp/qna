@@ -12,8 +12,11 @@ feature 'User can fill form answer', %q{
   scenario 'Authenticated user fill in form on page question', js: true do
     sign_in(user)
     visit question_path(question)
-    fill_in 'Body', with: 'NewAnswer'
-    click_on 'Reply'
+
+    within '.answers_form' do
+      fill_in 'Body', with: 'NewAnswer'
+      click_on 'Reply'
+    end
 
     expect(page).to have_content 'NewAnswer'
   end

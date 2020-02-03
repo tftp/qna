@@ -85,12 +85,12 @@ RSpec.describe AnswersController, type: :controller do
       before { login(author) }
 
       it 'deletes the answer' do
-        expect{delete :destroy, params: { id: answer, question_id: question }}.to change(Answer, :count).by(-1)
+        expect{delete :destroy, params: { id: answer, question_id: question }, format: :js}.to change(Answer, :count).by(-1)
       end
 
-      it 'redirect to answers' do
-        delete :destroy, params: { id: answer, question_id: question }
-        expect(response).to redirect_to question_path(question)
+      it 'render template delete' do
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
@@ -98,19 +98,19 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user) }
 
       it "can't deletes the answer" do
-        expect{delete :destroy, params: { id: answer, question_id: question }}.to_not change(Answer, :count)
+        expect{delete :destroy, params: { id: answer, question_id: question }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'redirect to answers' do
-        delete :destroy, params: { id: answer, question_id: question }
-        expect(response).to redirect_to question_path(question)
+      it 'render template delete' do
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
     context 'as not unauthenticate user' do
 
       it "can't deletes the answer" do
-        expect{delete :destroy, params: { id: answer, question_id: question }}.to_not change(Answer, :count)
+        expect{delete :destroy, params: { id: answer, question_id: question }, format: :js }.to_not change(Answer, :count)
       end
 
       it 'redirect to sign in page' do

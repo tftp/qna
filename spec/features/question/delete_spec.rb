@@ -15,7 +15,7 @@ feature 'User can delete question', %q{
     visit questions_path
 
     expect(page).to have_content question.title
-    click_on 'Delete question'
+    click_on 'Delete'
 
     expect(page).to_not have_content question.title
   end
@@ -24,12 +24,12 @@ feature 'User can delete question', %q{
     sign_in(somebody)
     visit questions_path
 
-    expect(page).to_not have_content 'Delete question'
+    expect(page).to_not have_content 'Delete'
   end
 
   scenario 'Unauthenticated user can not delete question' do
     visit questions_path
 
-    expect(page).to_not have_content 'Delete questions'
+    expect(page).to_not have_content 'Delete'
   end
 end
