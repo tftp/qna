@@ -1,8 +1,25 @@
-h1= @question.title
-p= @question.body
+.question-errors
+.question
+  h2 = @question.title
+  p = @question.body
+
+  - if user_signed_in?
+    - if current_user&.is_author?(question)
+
+      = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
+
+      = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
+          = f.label :title, 'Your question title'
+          = f.text_field :title
+          = f.label :body, 'Your question body'
+          = f.text_area :body
+          = f.submit 'Save'
 
 .answers
   = render @question.answers
 
--if user_signed_in?
-  = render 'answers/form'
+.answers_form
+  -if user_signed_in?
+    = render 'answers/form'
+
+= link_to 'Back', root_path
