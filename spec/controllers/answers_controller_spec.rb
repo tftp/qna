@@ -4,6 +4,7 @@ RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:author) { create(:user) }
   let(:question) { create(:question, user: author) }
+  let(:question_somebody) { create(:question, user: user) }
 
   describe 'GET #new' do
     context 'as authenticate_user' do
@@ -150,6 +151,38 @@ RSpec.describe AnswersController, type: :controller do
       it 'renders update view' do
         patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), question_id: answer.question }, format: :js
         expect(response).to render_template :update
+      end
+    end
+  end
+
+  describe 'PATCH #best' do
+    let!(:answer) { create(:answer, question: question, user: author) }
+    let!(:answer_somebody) { create(:answer, question: question_somebody, user: user) }
+    before { login(author) }
+
+    context 'as auhtor of question' do
+      it 'can change attribute' do
+        patch :best, params: { id: answer, question_id: answer.question }, format: :js
+        answer.reload
+        expect(answer.best).to eq true
+      end
+
+      it 'renders update view' do
+        patch :best, params: { id: answer, question_id: answer.question }, format: :js
+        expect(response).to render_template :best
+      end
+    end
+
+    context 'as not auhtor of question' do
+      it 'can not change attribute' do
+        patch :best, params: { id: answer_somebody, question_id: answer_somebody.question }, format: :js
+        answer.reload
+        expect(answer.best).to eq false
+      end
+
+      it 'renders update view' do
+        patch :best, params: { id: answer_somebody, question_id: answer_somebody.question }, format: :js
+        expect(response).to render_template :best
       end
     end
   end
