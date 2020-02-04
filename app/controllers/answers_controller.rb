@@ -23,6 +23,11 @@ class AnswersController < ApplicationController
     @answer.destroy if current_user.is_author?(@answer)
   end
 
+  def best
+    @answer = Answer.find(params[:id])
+    @answer.update_alone if current_user.is_author?(@answer.question)
+  end
+
   private
 
   def answer_params
