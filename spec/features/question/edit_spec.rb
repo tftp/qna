@@ -17,22 +17,24 @@ feature 'User can edit question', %q{
   describe 'Authenticated user' do
     background { sign_in(author) }
 
-    scenario 'can edit question as author', js: true do
-      question = create(:question, user: author)
-      visit question_path(question)
-      click_on(class: 'edit-question-link')
-      within '.question' do
-        fill_in 'Your question title', with: 'edited question title'
-        fill_in 'Your question body', with: 'edited question body'
-        click_on 'Save'
+    context 'can edit question' do
+      given!(:question) { create(:question, user: author) }
 
-        expect(page).to_not have_content question.title
-        expect(page).to_not have_content question.body
-        expect(page).to have_content 'edited question title'
-        expect(page).to have_content 'edited question body'
-        expect(page).to_not have_selector '#question_body'
+      scenario 'as author', js: true do
+        visit question_path(question)
+        click_on(class: 'edit-question-link')
+        within '.question' do
+          fill_in 'Your question title', with: 'edited question title'
+          fill_in 'Your question body', with: 'edited question body'
+          click_on 'Save'
+
+          expect(page).to_not have_content question.title
+          expect(page).to_not have_content question.body
+          expect(page).to have_content 'edited question title'
+          expect(page).to have_content 'edited question body'
+          expect(page).to_not have_selector '#question_body'
+        end
       end
-
     end
 
     scenario 'can not edit somebody question', js: true do

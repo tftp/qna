@@ -121,7 +121,7 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
-  describe 'PATH #update' do
+  describe 'PATCH #update' do
     let!(:answer) { create(:answer, question: question, user: author) }
 
     context 'with valid attributes' do
@@ -145,6 +145,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'can not change attributes' do
         expect do
           patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), question_id: answer.question }, format: :js
+          answer.reload
         end.to_not change(answer, :body)
       end
 
@@ -158,13 +159,14 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #best' do
     let!(:answer) { create(:answer, question: question, user: author) }
     let!(:answer_somebody) { create(:answer, question: question_somebody, user: user) }
-    before { login(author) }
 
     context 'as auhtor of question' do
+      before { login(author) }
+
       it 'can change attribute' do
         patch :best, params: { id: answer, question_id: answer.question }, format: :js
         answer.reload
-        expect(answer.best).to eq true
+        expect(answer).to be_best
       end
 
       it 'renders update view' do
@@ -174,16 +176,24 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'as not auhtor of question' do
+      before { login(author) }
+
       it 'can not change attribute' do
         patch :best, params: { id: answer_somebody, question_id: answer_somebody.question }, format: :js
         answer.reload
-        expect(answer.best).to eq false
+        expect(answer).not_to be_best
       end
 
       it 'renders update view' do
         patch :best, params: { id: answer_somebody, question_id: answer_somebody.question }, format: :js
         expect(response).to render_template :best
       end
+    end
+
+    it 'as unauthenticate user' do
+      patch :best, params: { id: answer_somebody, question_id: answer_somebody.question }, format: :js
+      answer.reload
+      expect(answer).not_to be_best
     end
   end
 end

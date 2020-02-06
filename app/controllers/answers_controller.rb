@@ -7,14 +7,15 @@ class AnswersController < ApplicationController
 
   def update
     @answer = Answer.find(params[:id])
-    @answer.update(answer_params)
+    @answer.update(answer_params) if current_user.is_author?(@answer)
     @question = @answer.question
   end
 
   def create
     @question = Question.find(params[:question_id])
     @answer = current_user.answers.build(answer_params)
-    @question.answers << @answer
+    #@question.answers << @answer
+    @answer.question = @question
     @answer.save
   end
 
@@ -25,7 +26,7 @@ class AnswersController < ApplicationController
 
   def best
     @answer = Answer.find(params[:id])
-    @answer.update_alone if current_user.is_author?(@answer.question)
+    @answer.set_as_best! if current_user.is_author?(@answer.question)
   end
 
   private

@@ -11,14 +11,17 @@ feature 'User can delete answer', %q{
   given(:question) { create(:question, user: somebody) }
   given!(:answer) { create(:answer, question: question, user: author) }
 
-  scenario 'Authenticated user can delete self answer', js: true do
-    answer_somebody = create(:answer, question: question, user: somebody)
-    sign_in(author)
-    visit question_path(question)
-    click_on 'Delete'
+  context 'Authenticated user can delete' do
+    given!(:answer_somebody) { create(:answer, question: question, user: somebody) }
 
-    expect(page).to_not have_content answer.body
-    expect(page).to have_content answer_somebody.body
+    scenario 'only self answer but not of somebody answer', js: true do
+      sign_in(author)
+      visit question_path(question)
+      click_on 'Delete'
+
+      expect(page).to_not have_content answer.body
+      expect(page).to have_content answer_somebody.body
+    end
   end
 
   scenario 'Authenticated user can not delete somebody answer', js: true do

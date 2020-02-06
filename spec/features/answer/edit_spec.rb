@@ -9,6 +9,7 @@ feature 'User can edit his answer', %q{
   given(:author) { create(:user) }
   given(:somebody) { create(:user) }
   given(:question) { create(:question, user: somebody) }
+  given!(:answer) { create(:answer, question: question, user: author) }
 
   scenario 'Unauthenticated user can not edit answer' do
     visit question_path(question)
@@ -18,7 +19,6 @@ feature 'User can edit his answer', %q{
 
   describe 'Authenticated user' do
     scenario 'edit his answer', js: true do
-      answer = create(:answer, question: question, user: author)
       sign_in(author)
       visit question_path(question)
 
@@ -34,7 +34,6 @@ feature 'User can edit his answer', %q{
     end
 
     scenario 'edit his answer with error', js: true do
-      answer = create(:answer, question: question, user: author)
       sign_in(author)
       visit question_path(question)
 
@@ -51,12 +50,13 @@ feature 'User can edit his answer', %q{
     end
 
     scenario "tries edit other user's answers", js: true do
-      answer = create(:answer, question: question, user: somebody)
-      sign_in(author)
+      sign_in(somebody)
       visit question_path(question)
 
-      expect(page).to have_content answer.body
-      expect(page).to_not have_link 'Edit'
+      within '.answers' do
+        expect(page).to have_content answer.body
+        expect(page).to_not have_link 'Edit'
+      end
     end
   end
 end
