@@ -1,9 +1,10 @@
 p
-  = link_to best_question_answer_path(answer.question, answer), remote: true, method: :patch
-    =answer.best
+  -if current_user&.is_author?(answer.question)
+    = link_to best_question_answer_path(answer.question, answer), class: 'best-answer-link', data: { answer_id: answer.id }, remote: true, method: :patch
+      =answer.best?
   = content_tag :span, answer.body, class: 'answer', data: { answer_id: answer.id }
 
-  = link_to 'Delete', question_answer_path(answer.question_id, answer.id), remote: true, method: :delete
+  = link_to 'Delete', [answer.question, answer], remote: true, method: :delete
   = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
 
   = form_with model: [answer.question, answer], class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
