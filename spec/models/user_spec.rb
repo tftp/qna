@@ -34,4 +34,20 @@ RSpec.describe User, type: :model do
       expect(author).not_to be_is_author(somebody_answer)
     end
   end
+
+  describe 'answer can check as best' do
+    let(:answers) { create_list(:answer, 2, question: self_question, user: author) }
+
+    it 'set on best as true of the current and set off of the other answer' do
+      answers[0].set_as_best!
+
+      expect(answers[0]).to be_best
+      expect(answer[1]).not_to be_best
+
+      answers[1].set_as_best!
+
+      expect(answers[1]).to be_best
+      expect(answer[0]).not_to be_best
+    end
+  end
 end
