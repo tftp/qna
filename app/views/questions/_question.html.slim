@@ -1,4 +1,4 @@
-p
+= content_tag :div, class: 'question-summary', data: { question_id: question.id } 
   =link_to question_path(question)
     = question.title
   - if current_user&.is_author?(question)

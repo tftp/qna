@@ -1,13 +1,19 @@
-p
-  -if current_user&.is_author?(answer.question)
-    = link_to best_question_answer_path(answer.question, answer), class: 'best-answer-link', data: { answer_id: answer.id }, remote: true, method: :patch
-      =answer.best?
-  = content_tag :span, answer.body, class: 'answer', data: { answer_id: answer.id }
+= content_tag :div, class: 'row row-answer', data: { answer_id: answer.id }
+  .col-1
+    -if current_user&.is_author?(answer.question)
+      =button_best(answer)
 
-  = link_to 'Delete', [answer.question, answer], remote: true, method: :delete
-  = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+  .col-4 class="alert alert-secondary"
+    = content_tag :span, answer.body, class: 'answer', data: { answer_id: answer.id }
+    p
+      = form_with model: [answer.question, answer], class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+        .form-group
+          = f.label :body, 'Your answer:'
+          = f.text_area :body, class: 'form-control'
+          = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
-  = form_with model: [answer.question, answer], class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-    = f.label :body, 'Your answer'
-    = f.text_area :body
-    = f.submit 'Save'
+  -if current_user&.is_author?(answer)
+    .col-1
+      = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    .col-1
+      = link_to 'Delete', [answer.question, answer], remote: true, method: :delete
