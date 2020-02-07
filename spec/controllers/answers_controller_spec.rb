@@ -195,20 +195,12 @@ RSpec.describe AnswersController, type: :controller do
       answer.reload
       expect(answer).not_to be_best
     end
-  end
 
-  context 'an order of answer' do
-    let(:answers) { create_list(:answer, 2, question: question, user: author) }
-    before { login(author) }
+    it 'renders unauthenticate user' do
+      patch :best, params: { id: answer_somebody, question_id: answer_somebody.question }, format: :js
 
-    it 'best answer is in top' do
-      patch :best, params: { id: answers[1], question_id: answers[1].question }, format: :js
-
-      expect(answers[1]).to eq question.answers[0]
-      patch :best, params: { id: answers[0], question_id: answers[0].question }, format: :js
-      question.answers.reload
-
-      expect(answers[0]).to eq question.answers[0]
+      # stattus 401 - Unauthorized
+      expect(response).to have_http_status(401)
     end
   end
 end

@@ -3,22 +3,17 @@ class Answer < ApplicationRecord
   belongs_to :user
 
   default_scope {order(best: :desc)}
+  scope :sort_update_answer, -> { order(updated_at: :desc) }
 
   validates :body, presence: true
-  validate :best_is_only_one_true, on: :update
+  validates_uniqueness_of :best, scope: :question_id, if: :best?, on: :update
 
   def set_as_best!
-    return if best
+    return if best?
     self.transaction do
       question.answers.update_all(best: false)
       self.update!(best: true)
     end
-  end
-
-  private
-
-  def best_is_only_one_true
-    errors.add(:best)  if question.answers.where(best: true).count > 1
   end
 
 end

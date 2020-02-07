@@ -27,10 +27,10 @@ feature 'User can select answer as best', %q{
         sign_in(author)
         visit question_path(question_author)
 
-        expect(page).to have_content 'false'
-        click_on 'false'
+        expect(page).to have_button 'false'
+        click_button 'false'
 
-        expect(page).to have_content 'true'
+        expect(page).to have_button 'true'
       end
     end
 
@@ -38,12 +38,12 @@ feature 'User can select answer as best', %q{
       sign_in(author)
       visit question_path(question_somebody)
 
-      expect(page).to_not have_content 'false'
-      expect(page).to_not have_content 'true'
+      expect(page).to_not have_button 'false'
+      expect(page).to_not have_button 'true'
     end
   end
 
-  describe 'author can', js: true do
+  describe 'OLD author can', js: true do
     given!(:answer_one) { create(:answer, :best, question: question_author, user: somebody) }
     given!(:answer_two) { create(:answer, question: question_author, user: somebody) }
 
@@ -54,24 +54,25 @@ feature 'User can select answer as best', %q{
 
     scenario 'reselect beter answer' do
       # для примера оставлю два разных варианта
-      expect(page).to have_selector("a.best-answer-link[data-answer-id='#{answer_one.id}']"), text: "true"
-      find("a.best-answer-link[data-answer-id='#{answer_two.id}']").has_text? "false"
+      expect(page).to have_selector("input.best-answer-link[data-answer-id='#{answer_one.id}']"), text: "true"
+      find("input.best-answer-link[data-answer-id='#{answer_two.id}']").has_text? "false"
 
-      click_link 'false'
+      click_button 'false'
 
-      find("a.best-answer-link[data-answer-id='#{answer_one.id}']").has_text? "false"
-      find("a.best-answer-link[data-answer-id='#{answer_two.id}']").has_text? "true"
+      find("input.best-answer-link[data-answer-id='#{answer_one.id}']").has_text? "false"
+      find("input.best-answer-link[data-answer-id='#{answer_two.id}']").has_text? "true"
     end
 
     scenario 'select beter answer and it has be on top' do
-      find("a.best-answer-link") do |selector|
-        selector.has_text? "true" if  selector.path.include?'P[1]'
-      end
+      within '.answers' do
+        buttons1 = page.all('input.best-answer-link')
+        buttons1.first.has_text? 'true'
+        p buttons1
+        click_button 'false'
 
-      click_link 'false'
-
-      find("a.best-answer-link") do |selector|
-        selector.has_text? "true" if  selector.path.include?'P[1]'
+        buttons2 = page.all('input.best-answer-link')
+        p buttons2
+        buttons2.first.has_text? 'true'
       end
     end
   end

@@ -14,7 +14,6 @@ class AnswersController < ApplicationController
   def create
     @question = Question.find(params[:question_id])
     @answer = current_user.answers.build(answer_params)
-    #@question.answers << @answer
     @answer.question = @question
     @answer.save
   end
