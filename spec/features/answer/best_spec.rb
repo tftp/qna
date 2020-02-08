@@ -64,16 +64,18 @@ feature 'User can select answer as best', %q{
     end
 
     scenario 'select beter answer and it has be on top' do
-      within '.answers' do
-        #find('.btn').first.has_css?('.btn-success')
-        p page.all('.best-answer-link').first.has_css? ".btn-success"
-        #buttons1.has_button? 'false'
-        #p buttons1
-        #click_button 'false'
-
-        #buttons2 = page.all('input.best-answer-link')
-        #p buttons2
-        #buttons2.first.has_text? 'true'
+      within all('.row-answer')[0] do
+        expect(page).to have_css '.btn-success'
+      end
+      within all('.row-answer')[1] do
+        expect(page).to have_css '.btn-secondary'
+      end
+      click_button 'false'
+      within all('.row-answer')[0] do
+        expect(page).to have_css '.btn-success'
+      end
+      within all('.row-answer')[1] do
+        expect(page).to have_css '.btn-secondary'
       end
     end
   end
