@@ -65,14 +65,15 @@ feature 'User can select answer as best', %q{
 
     scenario 'select beter answer and it has be on top' do
       within '.answers' do
-        buttons1 = page.all('input.best-answer-link')
-        buttons1.first.has_text? 'true'
-        p buttons1
-        click_button 'false'
+        #find('.btn').first.has_css?('.btn-success')
+        p page.all('.best-answer-link').first.has_css? ".btn-success"
+        #buttons1.has_button? 'false'
+        #p buttons1
+        #click_button 'false'
 
-        buttons2 = page.all('input.best-answer-link')
-        p buttons2
-        buttons2.first.has_text? 'true'
+        #buttons2 = page.all('input.best-answer-link')
+        #p buttons2
+        #buttons2.first.has_text? 'true'
       end
     end
   end
