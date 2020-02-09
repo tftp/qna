@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
-    @question = Question.find(params[:id])
+    @question = Question.with_attached_files.find(params[:id])
   end
 
   def new
