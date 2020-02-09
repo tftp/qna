@@ -5,22 +5,27 @@ class AnswersController < ApplicationController
     @answer = Answer.new
   end
 
+  def update
+    @answer = Answer.find(params[:id])
+    @answer.update(answer_params) if current_user.is_author?(@answer)
+    @question = @answer.question
+  end
+
   def create
     @question = Question.find(params[:question_id])
     @answer = current_user.answers.build(answer_params)
     @answer.question = @question
-
-    if @answer.save
-      redirect_to @question, notice: 'Your answer successfully created'
-    else
-      render 'questions/show'
-    end
+    @answer.save
   end
 
   def destroy
     @answer = Answer.find(params[:id])
     @answer.destroy if current_user.is_author?(@answer)
-    redirect_to question_path(@answer.question_id)
+  end
+
+  def best
+    @answer = Answer.find(params[:id])
+    @answer.set_as_best! if current_user.is_author?(@answer.question)
   end
 
   private

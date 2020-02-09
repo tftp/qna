@@ -4,8 +4,8 @@
       =button_best(answer)
 
   .col-4 class="alert alert-secondary"
-    = content_tag :span, class: 'answer', data: { answer_id: answer.id }
-      =answer.body 
+    = content_tag :span, answer.body, class: 'answer', data: { answer_id: answer.id }
+    p
       = form_with model: [answer.question, answer], class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
         .form-group
           = f.label :body, 'Your answer:'

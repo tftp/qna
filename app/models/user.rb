@@ -4,8 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
- has_many :questions
- has_many :answers
+ has_many :questions, dependent: :destroy
+ has_many :answers, dependent: :destroy
 
  validates :email, format: { with: /\A\w+@\w+\.[a-z]{2,3}\z/}
 
