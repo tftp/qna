@@ -2,8 +2,10 @@
 .question
   h2 = @question.title
   p = @question.body
-  - if @question.file.attached?
-    p= link_to @question.file.filename.to_s, url_for(@question.file)
+  - if @question.files.attached?
+    - @question.files.each do |file|
+      p= link_to file.filename.to_s, url_for(file)
+      
   - if current_user&.is_author?(question)
 
     = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
