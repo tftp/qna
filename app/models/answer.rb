@@ -2,6 +2,8 @@ class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
 
+  has_many_attached :files
+
   default_scope {order(best: :desc)}
   scope :sort_update_answer, -> { order(updated_at: :desc) }
 
