@@ -208,4 +208,37 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #delete_file' do
+    context 'User tries to delete file on his question' do
+      let!(:question) { create(:question, user: author) }
+      let(:file) { create_file_blob('rails_helper.rb') }
+      before { login(author) }
+
+      it 'deletes the file' do
+        question.files.attach(file)
+        file_for_delete = question.files.last
+        expect { delete :delete_file, params: { id: question, files: file_for_delete } }.to change(question.files, :count).by(-1)
+      end
+
+      it 'redirects to question view' do
+        question.files.attach(file)
+        file_for_delete = question.files.last
+        delete :delete_file, params: { id: question, files: file_for_delete }
+        expect(response).to redirect_to question_path(question)
+      end
+    end
+
+    context 'User tries to delete file to another question' do
+      let!(:question) { create(:question, user: author) }
+      let(:file) { create_file_blob('rails_helper.rb') }
+      before { login(user) }
+
+      it 'does not delete file' do
+        question.files.attach(file)
+        file_for_delete = question.files.last
+        expect { delete :delete_file, params: { id: question, files: file_for_delete } }.to_not change(question.files, :count)
+      end
+    end
+  end
 end

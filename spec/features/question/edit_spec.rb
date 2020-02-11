@@ -8,10 +8,18 @@ feature 'User can edit question', %q{
   given(:somebody) { create(:user) }
   given!(:question_somebody) { create(:question, user: somebody) }
 
-  scenario 'Unauthenticated user can not edit question' do
-    visit questions_path
+  describe 'Unauthenticated user can not' do
+    scenario 'edit question' do
+      visit question_path(question_somebody)
 
-    expect(page).to_not have_link 'Edit'
+      expect(page).to_not have_link 'Edit'
+    end
+
+    scenario 'delete atached file' do
+      visit question_path(question_somebody)
+
+      expect(page).to_not have_link(class: 'delete-file-link')
+    end
   end
 
   describe 'Authenticated user', js: true do
@@ -49,7 +57,16 @@ feature 'User can edit question', %q{
 
           expect(page).to have_link 'rails_helper.rb'
           expect(page).to have_link 'spec_helper.rb'
-        end        
+        end
+      end
+
+      scenario 'delete attached file' do
+        question.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'rails_helper.rb')
+        visit question_path(question)
+
+        click_link(class: 'delete-file-link')
+
+        expect(page).to_not have_link 'rails_helper.rb'
       end
     end
 

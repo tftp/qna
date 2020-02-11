@@ -17,8 +17,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @user = current_user
-    @question = @user.questions.new(question_params)
+    @question = current_user.questions.new(question_params)
 
     if @question.save
       redirect_to @question, notice: 'Your question successfully created'
@@ -34,6 +33,11 @@ class QuestionsController < ApplicationController
   def destroy
     question.destroy if current_user.is_author?(question)
     redirect_to questions_path
+  end
+
+  def delete_file
+    question.files.find(params[:files]).purge if current_user.is_author?(question)
+    redirect_to question_path(question)
   end
 
   helper_method :question
