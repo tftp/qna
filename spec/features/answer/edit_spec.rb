@@ -11,10 +11,18 @@ feature 'User can edit his answer', %q{
   given(:question) { create(:question, user: somebody) }
   given!(:answer) { create(:answer, question: question, user: author) }
 
-  scenario 'Unauthenticated user can not edit answer' do
-    visit question_path(question)
+  describe 'Unauthenticated user' do
+    scenario 'can not edit answer' do
+      visit question_path(question)
 
-    expect(page).to_not have_link 'Edit'
+      expect(page).to_not have_link 'Edit'
+    end
+
+    scenario 'can not delete atached file' do
+      visit question_path(question)
+
+      expect(page).to_not have_link(class: 'delete-file-link')
+    end
   end
 
   describe 'Authenticated user', js: true do
@@ -75,6 +83,18 @@ feature 'User can edit his answer', %q{
 
         expect(page).to have_link 'rails_helper.rb'
         expect(page).to have_link 'spec_helper.rb'
+      end
+    end
+
+    scenario 'delete attached file' do
+      sign_in(author)
+
+      answer.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'rails_helper.rb')
+      visit question_path(question)
+      within '.answers' do
+        click_link(class: 'delete-file-link')
+
+        expect(page).to_not have_link 'rails_helper.rb'
       end
     end
   end

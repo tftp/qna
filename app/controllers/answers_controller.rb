@@ -28,6 +28,12 @@ class AnswersController < ApplicationController
     @answer.set_as_best! if current_user.is_author?(@answer.question)
   end
 
+  def delete_file
+    @answer = Answer.find(params[:id])
+    @answer.files.find(params[:files]).purge if current_user.is_author?(@answer)
+    redirect_to question_path(@answer.question)
+  end
+
   private
 
   def answer_params

@@ -203,4 +203,38 @@ RSpec.describe AnswersController, type: :controller do
       expect(response).to have_http_status(401)
     end
   end
+
+  describe 'DELETE #delete_file' do
+    let!(:answer) { create(:answer, question: question, user: author) }
+    let!(:answer_somebody) { create(:answer, question: question_somebody, user: user) }
+
+    context 'User tries to delete file on his question' do
+      let(:file) { create_file_blob('rails_helper.rb') }
+      before { login(author) }
+
+      it 'deletes the file' do
+        answer.files.attach(file)
+        file_for_delete = answer.files.last
+        expect { delete :delete_file, params: { id: answer, files: file_for_delete } }.to change(answer.files, :count).by(-1)
+      end
+
+      it 'redirects to question view' do
+        answer.files.attach(file)
+        file_for_delete = answer.files.last
+        delete :delete_file, params: { id: answer, files: file_for_delete }
+        expect(response).to redirect_to question_path(question)
+      end
+    end
+
+    context 'User tries to delete file to another question' do
+      let(:file) { create_file_blob('rails_helper.rb') }
+      before { login(author) }
+
+      it 'does not delete file' do
+        answer_somebody.files.attach(file)
+        file_for_delete = answer_somebody.files.last
+        expect { delete :delete_file, params: { id: answer_somebody, files: file_for_delete } }.to_not change(answer_somebody.files, :count)
+      end
+    end
+  end
 end
