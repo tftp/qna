@@ -18,7 +18,7 @@
           = f.label :body, 'Your answer'
           = f.text_area :body, class: 'form-control'
           = f.label :files
-          = f.file_field :files, multiple: true
+          = f.file_field :files, multiple: true, direct_upload: true
           = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
   -if current_user&.is_author?(answer)
