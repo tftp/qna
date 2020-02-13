@@ -27,6 +27,7 @@ feature 'User can edit question', %q{
 
     context 'can edit question' do
       given!(:question) { create(:question, user: author) }
+      given(:file) { create_file_blob('rails_helper.rb') }
 
       scenario 'as author' do
         visit question_path(question)
@@ -61,7 +62,7 @@ feature 'User can edit question', %q{
       end
 
       scenario 'delete attached file' do
-        question.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'rails_helper.rb')
+        question.files.attach(file)
         visit question_path(question)
 
         click_link(class: 'delete-file-link')
