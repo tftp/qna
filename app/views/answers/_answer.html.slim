@@ -7,11 +7,7 @@
     = content_tag :span, class: 'answer', data: { answer_id: answer.id }
       =answer.body
       - if answer.files.attached?
-        - answer.files.each do |file|
-          .file-attached
-            nav class="nav"
-              = link_to file.filename.to_s, url_for(file), class: 'nav-link'
-              = link_to 'delete', delete_file_answer_path(answer, file), class: 'delete-file-link nav-link', method: :delete
+        = render answer.files
 
       = form_with model: [answer.question, answer], class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
         .form-group

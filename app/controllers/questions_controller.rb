@@ -35,11 +35,6 @@ class QuestionsController < ApplicationController
     redirect_to questions_path
   end
 
-  def delete_file
-    question.files.find(params[:files]).purge if current_user.is_author?(question)
-    redirect_to question_path(question)
-  end
-
   helper_method :question
 
   private

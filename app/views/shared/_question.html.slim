@@ -4,11 +4,7 @@
     h2 = @question.title
     p = @question.body
     - if @question.files.attached?
-      - @question.files.each do |file|
-        .file-attached
-          nav class="nav"
-            = link_to file.filename.to_s, url_for(file), class: 'nav-link'
-            = link_to 'delete', delete_file_question_path(@question, file), class: 'delete-file-link nav-link', method: :delete
+      = render @question.files
 
     = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
       .form-group
