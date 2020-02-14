@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
-    @question = Question.find(params[:id])
+    @question = Question.with_attached_files.find(params[:id])
   end
 
   def new
@@ -17,8 +17,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @user = current_user
-    @question = @user.questions.new(question_params)
+    @question = current_user.questions.new(question_params)
 
     if @question.save
       redirect_to @question, notice: 'Your question successfully created'
@@ -45,7 +44,7 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, files: [])
   end
 
 end

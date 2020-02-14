@@ -4,7 +4,11 @@
   p
     = f.label :title
     = f.text_field :title
-  p
-    = f.label :body
-    = f.text_area :body
+    p
+      = f.label :body
+      = f.text_area :body
+    p
+      = f.label :files
+      = f.file_field :files, multiple: true, direct_upload: true
+
   p = f.submit 'Ask'

@@ -4,12 +4,17 @@
       =button_best(answer)
 
   .col-4 class="alert alert-secondary"
-    = content_tag :span, answer.body, class: 'answer', data: { answer_id: answer.id }
-    p
+    = content_tag :span, class: 'answer', data: { answer_id: answer.id }
+      =answer.body
+      - if answer.files.attached?
+        = render answer.files
+
       = form_with model: [answer.question, answer], class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
         .form-group
-          = f.label :body, 'Your answer:'
+          = f.label :body, 'Your answer'
           = f.text_area :body, class: 'form-control'
+          = f.label :files
+          = f.file_field :files, multiple: true, direct_upload: true
           = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
   -if current_user&.is_author?(answer)

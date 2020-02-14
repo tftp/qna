@@ -1,0 +1,4 @@
+.file-attached
+  nav class="nav"
+    = link_to attachment.filename.to_s, url_for(attachment), class: 'nav-link'
+    = link_to 'delete', attachment_path(attachment), class: 'delete-file-link nav-link', method: :delete
