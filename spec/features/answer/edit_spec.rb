@@ -27,6 +27,7 @@ feature 'User can edit his answer', %q{
 
   describe 'Authenticated user', js: true do
     given(:file) { create_file_blob('rails_helper.rb') }
+    background { answer.files.attach(file) }
 
     scenario 'edit his answer' do
       sign_in(author)
@@ -90,9 +91,8 @@ feature 'User can edit his answer', %q{
 
     scenario 'delete attached file' do
       sign_in(author)
-
-      answer.files.attach(file)
       visit question_path(question)
+
       within '.answers' do
         click_link(class: 'delete-file-link')
 

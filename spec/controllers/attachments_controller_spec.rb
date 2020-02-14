@@ -11,82 +11,58 @@ RSpec.describe AttachmentsController, type: :controller do
 
   describe 'DELETE #destroy' do
     context 'Unauthenticate user' do
-      it 'can not delete attached file from question' do
+      let!(:file_for_delete) do
         question_author.files.attach(file)
-        file_for_delete = question_author.files.last
+        question_author.files.last
+      end
+
+      it 'can not delete attached file from question' do
 
         expect { delete :destroy, params: { id: file_for_delete } }.to_not change(question_author.files, :count)
       end
 
-      it 'can not delete attached file from answer' do
-        answer_author.files.attach(file)
-        file_for_delete = answer_author.files.last
+      it 'redirect to sign in page if fail of questions file delete' do
+        delete :destroy, params: { id: file_for_delete }
 
-        expect { delete :destroy, params: { id: file_for_delete } }.to_not change(answer_author.files, :count)
+        expect(response).to redirect_to new_user_session_path
       end
     end
 
-    context 'Authenticate user deletes file' do
+    context 'Authenticate user deletes somebodys file' do
       before { login(author) }
-
-      it 'can do it for his question' do
-        question_author.files.attach(file)
-        file_for_delete = question_author.files.last
-
-        expect { delete :destroy, params: { id: file_for_delete } }.to change(question_author.files, :count).by(-1)
+      let!(:file_for_delete) do
+        question_user.files.attach(file)
+        question_user.files.last
       end
 
       it 'can not do it for somebodys question' do
-        question_user.files.attach(file)
-        file_for_delete = question_user.files.last
 
         expect { delete :destroy, params: { id: file_for_delete } }.to_not change(question_user.files, :count)
       end
 
-      it 'can do it for his answer' do
-        answer_author.files.attach(file)
-        file_for_delete = answer_author.files.last
-
-        expect { delete :destroy, params: { id: file_for_delete } }.to change(answer_author.files, :count).by(-1)
-      end
-
-      it 'can not do it for somebodys answer' do
-        answer_user.files.attach(file)
-        file_for_delete = answer_user.files.last
-
-        expect { delete :destroy, params: { id: file_for_delete } }.to_not change(answer_user.files, :count)
-      end
-
-      it 'redirects to question view if answers file delete' do
-        answer_author.files.attach(file)
-        file_for_delete = answer_author.files.last
-        delete :destroy, params: { id: file_for_delete }
-
-        expect(response).to redirect_to question_path(answer_author.question)
-      end
-
-      it 'redirects to question view if questions file delete' do
-        question_author.files.attach(file)
-        file_for_delete = question_author.files.last
-        delete :destroy, params: { id: file_for_delete }
-
-        expect(response).to redirect_to question_path(question_author)
-      end
-
-      it 'redirects to question view if fail of answers file delete' do
-        answer_user.files.attach(file)
-        file_for_delete = answer_user.files.last
-        delete :destroy, params: { id: file_for_delete }
-
-        expect(response).to redirect_to question_path(answer_user.question)
-      end
-
       it 'redirects to question view if fail of questions file delete' do
-        question_user.files.attach(file)
-        file_for_delete = question_user.files.last
         delete :destroy, params: { id: file_for_delete }
 
         expect(response).to redirect_to question_path(question_user)
+      end
+    end
+
+    context 'Authenticate user deletes his file' do
+      before { login(author) }
+      let!(:file_for_delete) do
+        question_author.files.attach(file)
+        question_author.files.last
+      end
+
+      it 'can do it for his question' do
+
+        expect { delete :destroy, params: { id: file_for_delete } }.to change(question_author.files, :count).by(-1)
+      end
+
+      it 'redirects to question view if questions file delete' do
+        delete :destroy, params: { id: file_for_delete }
+
+        expect(response).to redirect_to question_path(question_author)
       end
     end
   end
