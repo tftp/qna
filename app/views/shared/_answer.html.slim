@@ -6,6 +6,12 @@
   .col-4 class="alert alert-secondary"
     = content_tag :span, class: 'answer', data: { answer_id: answer.id }
       =answer.body
+      .links
+        p Links:
+        ul
+          - answer.links.each do |link|
+            li= link_to link.name, link.url
+
       - if answer.files.attached?
         = render answer.files
 

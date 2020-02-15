@@ -21,6 +21,12 @@
       .col-1 class="alert alert-secondary"
         = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
 
+.links
+  p Links:
+  ul
+    - @question.links.each do |link|
+      li= link_to link.name, link.url
+
 .answers
   = render @question.answers.with_attached_files
 

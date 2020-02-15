@@ -25,12 +25,20 @@ RSpec.describe QuestionsController, type: :controller do
     it 'renders show view' do
       expect(response).to render_template :show
     end
+
+    it 'assigns a new Link for answer' do
+      expect(assigns(:answer).links.first).to be_a_new(Link)
+    end
   end
 
   describe 'GET #new' do
     context 'as not authenticate user' do
       before { login(author) }
       before { get :new }
+
+      it 'assigns a new Link for question' do
+        expect(assigns(:question).links.first).to be_a_new(Link)
+      end
 
       it 'renders new view' do
         expect(response).to render_template :new

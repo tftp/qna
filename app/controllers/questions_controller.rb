@@ -6,11 +6,12 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
+    @answer.links.build
     @question = Question.with_attached_files.find(params[:id])
   end
 
   def new
-
+    question.links.build
   end
 
   def edit
@@ -44,7 +45,8 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body,
+                                      files: [], links_attributes: [:name, :url])
   end
 
 end
