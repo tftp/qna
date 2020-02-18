@@ -2,5 +2,5 @@ $('.answer-errors').html('<%= j render 'shared/errors', resource: @answer %>')
 <% if @answer.persisted? %>
   $('.answers').append('<%= j render 'shared/answer', answer: @answer %>')
   <% answer_blank %>
-  $('.answers-form').html('<%= j render 'answers/form' %>')
+  $('.answers_form').html('<%= j render 'answers/form' %>')
 <% end %>
