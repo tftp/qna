@@ -19,12 +19,13 @@
         = f.text_area :body, class: 'form-control'
         = f.label :files
         = f.file_field :files, multiple: true, direct_upload: true
-        = f.fields_for :links do |l|
-          .form-group
-            = l.label :name, 'Links name'
-            = l.text_field :name, class: 'form-control'
-            = l.label :url
-            = l.text_field :url, class: 'form-control'
+
+        .links
+          = f.fields_for :links do |link|
+            = render 'link_fields', :f => link
+          .link-add
+            = link_to_add_association 'add link', f, :links
+
         = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
   - if current_user&.is_author?(question)

@@ -15,7 +15,7 @@ feature 'User can edit links to question', %q{
   given(:bad_url) { 'http://bad' }
 
   scenario 'Unauthenticated user can not edit links' do
-    visit questions_path(question)
+    visit question_path(question)
 
     expect(page).to_not have_link 'Edit'
   end
@@ -27,7 +27,7 @@ feature 'User can edit links to question', %q{
       visit question_path(question)
     end
 
-    scenario 'adds link when edit question', js: true do
+    scenario 'change the link when edit question', js: true do
 
       expect(page).to have_link 'Google', href: google_url
 
@@ -46,9 +46,32 @@ feature 'User can edit links to question', %q{
       expect(page).to have_link 'My git', href: git_url
     end
 
-    scenario 'can add some links'
+    scenario 'can add link when edit question', js: true do
 
-    scenario 'can not add bad link instead of', js: true do
+      expect(page).to have_link 'Google', href: google_url
+
+      within '.question' do
+        click_on(class: 'edit-question-link')
+        fill_in 'Your question title', with: 'edited question title'
+        fill_in 'Your question body', with: 'edited question body'
+
+        within '.link-add' do
+          find_link('add link').click
+        end
+
+        within all('.nested-fields').last do
+          find_field('Link name').set 'My git'
+          find_field('Url').set git_url
+        end
+
+        click_on 'Save'
+
+        expect(page).to have_link 'Google', href: google_url
+        expect(page).to have_link 'My git', href: git_url
+      end
+    end
+
+    scenario 'can not add bad link', js: true do
 
       expect(page).to have_link 'Google', href: google_url
 
@@ -81,6 +104,12 @@ feature 'User can edit links to question', %q{
       end
 
       expect(page).to_not have_link 'Google', href: google_url
+    end
+
+    scenario 'can not add link in sombody question', js: true do
+      visit question_path(question_somebody)
+
+      expect(page).to_not have_link 'Edit'
     end
   end
 end
