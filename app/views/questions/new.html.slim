@@ -1,23 +1,22 @@
-= render 'shared/errors', resource: question
+.question-errors
+  = render 'shared/errors', resource: question
 
-= form_with model: question, url: questions_path do |f|
-  p
-    = f.label :title
-    = f.text_field :title
-    p
+.col-6 class="alert alert-secondary"
+  = form_with model: question, url: questions_path, local: true do |f|
+    .form-group
+      = f.label :title
+      = f.text_field :title, class: 'form-control'
       = f.label :body
-      = f.text_area :body
-    p
+      = f.text_area :body, class: 'form-control'
       = f.label :files
       = f.file_field :files, multiple: true, direct_upload: true
 
-    p
-      = f.fields_for :links do |l|
-        p
-          = l.label :name, 'Links name'
-          = l.text_field :name
-        p
-          = l.label :url
-          = l.text_field :url
+      .links
+        = f.fields_for :links do |link|
+          = render 'link_fields', :f => link
+        .link-add
+          = link_to_add_association 'add link', f, :links
 
-  p = f.submit 'Ask'
+      = f.submit 'Ask', class: 'btn btn-secondary btn-sm btn-block'
+
+  = button_to 'Back', root_path, class: 'btn btn-secondary btn-sm btn-block', method: :get
