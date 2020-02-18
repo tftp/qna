@@ -36,7 +36,7 @@ feature 'User can add links to question', %q{
       expect(page).to have_link 'My git', href: git_url
     end
 
-    scenario 'can add some links' do
+    scenario 'can add some links', js: true do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'text text text'
 
@@ -46,15 +46,16 @@ feature 'User can add links to question', %q{
       within '.link-add' do
         find_link('add link').click
       end
-p find_all('.nested-fields').count
-#save_and_open_page
+
+      #оставлю эту конструкцию для примера поиска повторяющихся элементов
+      find_all('.nested-fields').count
+
       within all('.nested-fields').last do
         find_field('Link name').set 'Google'
         find_field('Url').set google_url
       end
 
       click_on 'Ask'
-#save_and_open_page
 
       expect(page).to have_link 'My git', href: git_url
       expect(page).to have_link 'Google', href: google_url
