@@ -11,6 +11,7 @@ feature 'User can add links to answer', %q{
   given(:git_url) {'https://github.com'}
   given(:google_url) { 'http://google.ru' }
   given(:bad_url) { 'http://bad' }
+  given(:gist_url) { 'https://gist.github.com/tftp/398dc452ae2212d2e17b60777ee28a3c' }
 
   scenario 'Unauthenticated user can not add links' do
     visit question_path(question)

@@ -10,7 +10,7 @@
         p Links:
         ul
           - answer.links.each do |link|
-            li= link_to link.name, link.url
+            li= check_for_gist_link(link)
 
       - if answer.files.attached?
         = render answer.files

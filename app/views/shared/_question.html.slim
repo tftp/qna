@@ -9,7 +9,7 @@
       p Links:
       ul
         - @question.links.each do |link|
-          li= link_to link.name, link.url
+          li= check_for_gist_link(link)
 
     = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
       .form-group
