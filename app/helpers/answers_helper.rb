@@ -16,10 +16,4 @@ module AnswersHelper
                   method: :patch
     end
   end
-
-  def answer_blank
-    @answer = Answer.new
-    @answer.links.build
-  end
-
 end
