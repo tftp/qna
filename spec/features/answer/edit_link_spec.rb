@@ -12,9 +12,9 @@ feature 'User can edit links to answer', %q{
   given(:answer) { create(:answer, question: question, user: author) }
   given(:answer_somebody) { create(:answer, question: question, user: user) }
   given(:git_url) { 'https://github.com' }
-  given(:google_url) { 'http://google.ru' }
-  given(:bad_url) { 'http://bad' }
-  given(:ya_url) { 'http://ya.ru' }
+  given(:google_url) { 'https://google.ru' }
+  given(:bad_url) { 'https://bad' }
+  given(:ya_url) { 'https://ya.ru' }
 
   scenario 'Unauthenticated user can not edit links' do
     visit question_path(question)
@@ -27,8 +27,8 @@ feature 'User can edit links to answer', %q{
   describe 'Authenticated user' do
     background do
       sign_in(author)
-      answer.links.create(name: 'Google', url: google_url)
-      answer_somebody.links.create(name: 'Yandex', url: ya_url)
+      create(:link, :google, linkable: answer)
+      create(:link, :yandex, linkable: answer_somebody)
       visit question_path(question)
     end
 
