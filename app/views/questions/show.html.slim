@@ -6,12 +6,7 @@
       p = @question.body
       - if @question.files.attached?
         = render @question.files
-
-      .links
-        p Links:
-        ul
-          - @question.links.each do |link|
-            li= output_link(link)
+      = render 'shared/link', resourse: @question
 
       = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
         .form-group
@@ -21,12 +16,7 @@
           = f.text_area :body, class: 'form-control'
           = f.label :files
           = f.file_field :files, multiple: true, direct_upload: true
-
-          .links
-            = f.fields_for :links do |link|
-              = render 'link_fields', :f => link
-            .link-add
-              = link_to_add_association 'add link', f, :links
+          = render 'shared/form_link', :f => f
 
           = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
