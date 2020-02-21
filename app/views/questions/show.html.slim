@@ -11,7 +11,7 @@
         p Links:
         ul
           - @question.links.each do |link|
-            li= check_for_gist_link(link)
+            li= output_link(link)
 
       = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
         .form-group
