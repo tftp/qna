@@ -1,11 +1,9 @@
 class Answer < ApplicationRecord
+  include DefiningLinks
+  
   belongs_to :question
   belongs_to :user
-  has_many :links, dependent: :destroy, as: :linkable
-
   has_many_attached :files
-
-  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
   default_scope {order(best: :desc)}
   scope :sort_update_answer, -> { order(updated_at: :desc) }
