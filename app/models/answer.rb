@@ -1,6 +1,6 @@
 class Answer < ApplicationRecord
-  include DefiningLinks
-  
+  include Linkable
+
   belongs_to :question
   belongs_to :user
   has_many_attached :files

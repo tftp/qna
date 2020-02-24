@@ -1,5 +1,5 @@
 class Question < ApplicationRecord
-  include DefiningLinks
+  include Linkable
 
   has_many :answers, dependent: :destroy
   belongs_to :user
