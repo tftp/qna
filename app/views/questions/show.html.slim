@@ -1,11 +1,12 @@
 .question-errors
 .question
   .row
-    .col-6 class="alert alert-secondary"
+    .col-6.alert.alert-secondary
       h2 = @question.title
       p = @question.body
       - if @question.files.attached?
         = render @question.files
+      = render 'shared/link', resourse: @question
 
       = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
         .form-group
@@ -15,10 +16,12 @@
           = f.text_area :body, class: 'form-control'
           = f.label :files
           = f.file_field :files, multiple: true, direct_upload: true
+          = render 'shared/form_link', :f => f
+
           = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
     - if current_user&.is_author?(question)
-      .col-1 class="alert alert-secondary"
+      .col-1.alert.alert-secondary
         = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
 
 .answers

@@ -5,6 +5,7 @@
     p = @question.body
     - if @question.files.attached?
       = render @question.files
+    = render 'shared/link', resourse: @question
 
     = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
       .form-group
@@ -14,6 +15,8 @@
         = f.text_area :body, class: 'form-control'
         = f.label :files
         = f.file_field :files, multiple: true, direct_upload: true
+        = render 'shared/form_link', :f => f
+
         = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
   - if current_user&.is_author?(question)

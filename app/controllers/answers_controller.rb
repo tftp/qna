@@ -16,6 +16,7 @@ class AnswersController < ApplicationController
     @answer = current_user.answers.build(answer_params)
     @answer.question = @question
     @answer.save
+
   end
 
   def destroy
@@ -31,6 +32,7 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body,
+                                    files: [], links_attributes: [:id, :name, :url, :_destroy])
   end
 end
