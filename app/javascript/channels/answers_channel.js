@@ -7,14 +7,16 @@ $(document).on('turbolinks:load', function(){
   })
 
   $('form.new-answer').on('ajax:success', function(event){
-    var  xhr = event.detail[2];
+    var  answer = event.detail[0];
 
-    $('.answers').append(xhr.responseText);
+    $('.answers').append('<p>'+answer.body+'</p>');
   })
     .on('ajax:error', function(event){
-      var  xhr = event.detail[2];
+      var  errors = event.detail[0];
 
-      $('.answer-errors').html(xhr.responseText)
+      $.each(errors, function(index, value){
+        $('.answer-errors').append('<p>' + value + '</p>');
+      })
     })
 
 });
