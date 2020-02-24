@@ -17,6 +17,15 @@ class AnswersController < ApplicationController
     @answer.question = @question
     @answer.save
 
+    respond_to do |format|
+      if @answer.save
+        format.html { render  @answer }
+      else
+        format.html do
+          render partial: 'shared/errors', locals: { resource: @answer }, status: 422
+        end
+      end
+    end
   end
 
   def destroy
