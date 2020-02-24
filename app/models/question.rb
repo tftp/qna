@@ -1,5 +1,6 @@
 class Question < ApplicationRecord
   include Linkable
+  include Badgeable
 
   has_many :answers, dependent: :destroy
   belongs_to :user

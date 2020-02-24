@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_15_065107) do
+ActiveRecord::Schema.define(version: 2020_02_24_092038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,15 @@ ActiveRecord::Schema.define(version: 2020_02_15_065107) do
     t.index ["question_id"], name: "answers_question_id_best_true", unique: true, where: "(best = true)"
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
+  end
+
+  create_table "badges", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "badgeable_type"
+    t.bigint "badgeable_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["badgeable_type", "badgeable_id"], name: "index_badges_on_badgeable_type_and_badgeable_id"
   end
 
   create_table "links", force: :cascade do |t|
