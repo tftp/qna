@@ -1,5 +1,6 @@
 class Answer < ApplicationRecord
   include Linkable
+  include Badgeable
 
   belongs_to :question
   belongs_to :user

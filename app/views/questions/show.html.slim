@@ -7,6 +7,9 @@
       - if @question.files.attached?
         = render @question.files
       = render 'shared/link', resourse: @question
+      p
+        - if @question.badge
+          = image_tag(@question.badge.file, class: 'img-badge')
 
       = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
         .form-group
