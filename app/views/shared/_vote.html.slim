@@ -1,0 +1,4 @@
+.col-1.alert.alert-secondary
+  p= link_to 'minus', polymorphic_path([:vote, resourse], option: 'negative'), class: "#{current_user&.is_author?(resourse) ? 'hidden' : 'vote-negative-link'}", method: :patch
+  p= link_to '0', "#", class: 'vote-mark-link'
+  p= link_to 'plus', polymorphic_path([:vote, resourse], option: 'positive'), class: "#{current_user&.is_author?(resourse) ? 'hidden' : 'vote-pisitive-link'}", method: :patch

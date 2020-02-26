@@ -1,6 +1,9 @@
 .question-errors
 .question
   .row
+    -if user_signed_in?
+      = render 'shared/vote', resourse: @question
+
     .col-6.alert.alert-secondary
       h2 = @question.title
       p = @question.body
