@@ -8,6 +8,6 @@ class Vote < ApplicationRecord
   #эта проверка не идет, наверное нельзя проверить множественные поля на уникальность
   #validates [:users, :votable_type, :votable_id], uniqueness: true
 
-  scope :find_votables, -> (item){ where(votable: item) }
+  scope :find_votables, -> (params){ params[:user] ? where(votable: params[:votable], user: params[:user]) : where(votable: params[:votable]) }
 
 end

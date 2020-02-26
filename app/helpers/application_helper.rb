@@ -8,4 +8,8 @@ module ApplicationHelper
     end
   end
 
+  def count_votes(resourse)
+    Vote.find_votables(votable: resourse).pluck(:value).sum
+  end
+
 end

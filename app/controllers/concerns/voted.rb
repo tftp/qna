@@ -15,10 +15,12 @@ module Voted
   private
 
   def positive
+    # повторное нажатие обнуляет голос
     @vote.value = @vote.value.zero? ? 1 : 0
   end
 
   def negative
+    # повторное нажатие обнуляет голос
     @vote.value = @vote.value.zero? ? -1 : 0
   end
 
@@ -31,10 +33,10 @@ module Voted
   end
 
   def set_vote
-    @vote = find_votable(@votable).nil? ? @votable.votes.build(user: current_user) : find_votable(@votable)
+    @vote = find_votable(@votable) ? find_votable(@votable) : @votable.votes.build(user: current_user)
   end
 
   def find_votable(votable)
-    Vote.find_votables(votable).first
+    Vote.find_votables(votable: votable, user: current_user).first
   end
 end
