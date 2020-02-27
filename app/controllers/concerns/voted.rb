@@ -9,18 +9,25 @@ module Voted
   def vote
     option = params[:option]
     send(option.to_sym)
-    @vote.save
+
+    respond_to do |format|
+      if @vote.save
+        format.html { render partial: 'shared/vote', locals: { resource: @votable } }
+      else
+        format.html { render partial: 'shared/errors', locals: { resource: @vote }, status: 422 }
+      end
+    end
   end
 
   private
 
   def positive
-    # повторное нажатие обнуляет голос
+    # повторное нажатие plus обнуляет голос
     @vote.value = @vote.value.zero? ? 1 : 0
   end
 
   def negative
-    # повторное нажатие обнуляет голос
+    # повторное нажатие minus обнуляет голос
     @vote.value = @vote.value.zero? ? -1 : 0
   end
 
