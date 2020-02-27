@@ -2,19 +2,18 @@ module Voted
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_votable, only: [:vote]
-    before_action :set_vote, only: [:vote]
+    before_action :set_votable, only: [:voting]
+    before_action :set_vote, only: [:voting]
   end
 
-  def vote
+  def voting
     option = params[:option]
     send(option.to_sym)
-
     respond_to do |format|
       if @vote.save
-        format.html { render partial: 'shared/vote', locals: { resource: @votable } }
+        format.json { render json: @votable.count_votes }
       else
-        format.html { render partial: 'shared/errors', locals: { resource: @vote }, status: 422 }
+        format.json { render json: @vote.errors.full_messages, status: 422 }
       end
     end
   end
