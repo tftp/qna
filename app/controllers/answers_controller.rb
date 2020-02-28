@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   include Voted
-  
+
   before_action :authenticate_user!
 
   def new
@@ -19,15 +19,6 @@ class AnswersController < ApplicationController
     @answer.question = @question
     @answer.save
 
-    respond_to do |format|
-      if @answer.save
-        format.json { render json: @answer }
-      else
-        format.json do
-          render json: @answer.errors.full_messages, status: 422
-        end
-      end
-    end
   end
 
   def destroy
