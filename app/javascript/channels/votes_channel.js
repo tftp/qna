@@ -1,6 +1,6 @@
 $(document).on('turbolinks:load', function(){
 
-  $('a.vote-pisitive-link').on('ajax:success', function(event){
+  $('a.vote-positive-link').on('ajax:success', function(event){
     var  vote = event.detail[0];
     var answerId = $(this).data('answerId');
     var questionId = $(this).data('questionId');
@@ -12,10 +12,8 @@ $(document).on('turbolinks:load', function(){
   .on('ajax:error', function(event){
     var  errors = event.detail[0];
 
-    $.each(errors, function(index, value){
-      if (answerId) $('.answer-errors').append('<p>' + value + '</p>');
-      if (questionId) $('.question-errors').append('<p>' + value + '</p>');
-    })
+    if (answerId) $('.answer-errors').append('<p>' + errors + '</p>');
+    if (questionId) $('.question-errors').append('<p>' + errors + '</p>');
   })
 
   $('a.vote-negative-link').on('ajax:success', function(event){
@@ -30,10 +28,8 @@ $(document).on('turbolinks:load', function(){
   .on('ajax:error', function(event){
     var  errors = event.detail[0];
 
-    $.each(errors, function(index, value){
-      if (answerId) $('.answer-errors').append('<p>' + value + '</p>');
-      if (questionId) $('.question-errors').append('<p>' + value + '</p>');
-    })
+    if (answerId) $('.answer-errors').append('<p>' + errors + '</p>');
+    if (questionId) $('.question-errors').append('<p>' + errors + '</p>');
   })
 
 });

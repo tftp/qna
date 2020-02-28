@@ -19,11 +19,11 @@ module ApplicationHelper
   def vote_positive_link(votable)
     if votable.class.eql? Question
       link_to 'plus', polymorphic_path([:voting, votable], option: 'positive'),
-                class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-pisitive-link'}",
+                class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-positive-link'}",
                 data: { question_id: votable.id, type: :json }, remote: true, method: :patch
     else
       link_to 'plus', polymorphic_path([:voting, votable], option: 'positive'),
-                class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-pisitive-link'}",
+                class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-positive-link'}",
                 data: { answer_id: votable.id, type: :json }, remote: true, method: :patch
     end
   end
