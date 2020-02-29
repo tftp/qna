@@ -9,35 +9,19 @@ module ApplicationHelper
   end
 
   def output_count_votes(votable)
-    if votable.class.eql? Question
-      content_tag :div, "#{votable.count_votes}", class: "vote-mark-question", id: "#{votable.id}"
-    else
-      content_tag :div, "#{votable.count_votes}", class: "vote-mark-answer", id: "#{votable.id}"
-    end
+      content_tag :div, "#{votable.count_votes}", class: "vote-mark-#{votable.class.to_s.underscore}", id: "#{votable.id}"
   end
 
   def vote_positive_link(votable)
-    if votable.class.eql? Question
-      link_to 'plus', polymorphic_path([:voting, votable], option: 'positive'),
-                class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-positive-link'}",
-                data: { question_id: votable.id, type: :json }, remote: true, method: :patch
-    else
-      link_to 'plus', polymorphic_path([:voting, votable], option: 'positive'),
-                class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-positive-link'}",
-                data: { answer_id: votable.id, type: :json }, remote: true, method: :patch
-    end
+    link_to 'plus', polymorphic_path([:voting, votable], option: 'positive'),
+              class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-change-link'}",
+              data: { votable_type: votable.class.to_s.underscore ,votable_id: votable.id, type: :json }, remote: true, method: :patch
   end
 
   def vote_negative_link(votable)
-    if votable.class.eql? Question
-      link_to 'minus', polymorphic_path([:voting, votable], option: 'negative'),
-                class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-negative-link'}",
-                data: { question_id: votable.id, type: :json }, remote: true, method: :patch
-    else
-      link_to 'minus', polymorphic_path([:voting, votable], option: 'negative'),
-                class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-negative-link'}",
-                data: { answer_id: votable.id, type: :json }, remote: true, method: :patch
-    end
+    link_to 'minus', polymorphic_path([:voting, votable], option: 'negative'),
+              class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-change-link'}",
+              data: { votable_type: votable.class.to_s.underscore ,votable_id: votable.id, type: :json }, remote: true, method: :patch
   end
 
 end

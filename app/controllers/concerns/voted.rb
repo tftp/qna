@@ -26,6 +26,8 @@ module Voted
 
   def negative
     # повторное нажатие minus обнуляет голос
+    pp @vote
+    pp @votable
     @vote.value = @vote.value.zero? ? -1 : 0
   end
 
@@ -42,6 +44,6 @@ module Voted
   end
 
   def find_votable(votable)
-    Vote.find_votables(votable: votable, user: current_user).first
+    Vote.find_by votable: votable, user: current_user
   end
 end

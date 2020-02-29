@@ -6,7 +6,7 @@ module Votable
   end
 
   def count_votes
-    Vote.find_votables(votable: self).pluck(:value).sum
+    votes.sum(:value)
   end
 
 end
