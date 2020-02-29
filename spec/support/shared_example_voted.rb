@@ -1,18 +1,20 @@
 RSpec.shared_examples_for "voted" do
-  let(:model) { described_class }
-  let(:user) { create(:user) }
-  let(:author) { create(:user) }
-  let!(:question) { create(:question, user: author) }
-  let!(:answer) { create(:answer, question: question, user: author) }
-  let!(:votable) { (model.eql? QuestionsController) ? question : answer }
-  let!(:question_user) { create(:question, user: user) }
-  let!(:answer_user) { create(:answer, question: question, user: user) }
-  let!(:votable_user) { (model.eql? QuestionsController) ? question_user : answer_user }
-
   describe 'PATCH #voting' do
-
     context 'as authenticate user' do
       before { login(author) }
+
+      it 'assigns a new vote for votable' do
+        patch :voting, params: { id: votable, option: 'positive' }, format: :json
+
+        expect(assigns(:votable).votes.first).to be_a_new(Vote)
+        expect(assigns(:votable).votes.first.value).to eq 1
+      end
+
+      it 'cheque of the votables value' do
+        patch :voting, params: { id: votable, option: 'positive' }, format: :json
+
+        expect(assigns(:votable).votes.first.value).to eq 1
+      end
 
       it 'as author votable hav response 422' do
         expect(patch :voting, params: { id: votable, option: 'positive' }, format: :json).to have_http_status(422)

@@ -7,7 +7,11 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question_old) { question }
 
 
-  it_behaves_like 'voted'
+  describe 'Voted' do
+    let(:votable) { question }
+    let(:votable_user) { create(:question, user: user) }
+    it_behaves_like 'voted'
+  end
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2, user: author) }

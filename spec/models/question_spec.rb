@@ -14,6 +14,8 @@ RSpec.describe Question, type: :model do
   end
 
   describe 'Vote' do
+    let(:votable) { create(:question, user: user) }
+
     it_behaves_like "votable"
   end
 end
