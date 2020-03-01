@@ -47,7 +47,7 @@ feature 'User can vote for answer', %q{
       end
     end
 
-    scenario 'can not vaote as author' do
+    scenario 'can not vote as author' do
       within ".row-answer[data-answer-id='#{answer_author.id}']" do
 
         expect(page).to_not have_link 'plus'

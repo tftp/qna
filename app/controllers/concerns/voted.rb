@@ -1,23 +1,23 @@
 module Voted
   extend ActiveSupport::Concern
 
-  included do
-    before_action :set_votable, :set_vote, only: [:voting]
-  end
-
-  def voting
-    option = params[:option]
-    send(option.to_sym)
-    respond_to do |format|
-      if !current_user.is_author?(@votable) && @vote.save
-        format.json { render json: @votable.count_votes }
-      else
-        format.json { render json:'Unprocessable Entity', status: 422 }
-      end
+  def vote
+    set_votable
+    set_vote
+    voting_process(params[:option])
+    if !current_user.is_author?(@votable) && @vote.save
+       render json: @votable.count_votes
+    else
+       render json:'Unprocessable Entity', status: 422
     end
   end
 
   private
+
+  def voting_process(option)
+    positive if option.eql? 'positive'
+    negative if option.eql? 'negative'
+  end
 
   def positive
     # повторное нажатие plus обнуляет голос
@@ -26,8 +26,6 @@ module Voted
 
   def negative
     # повторное нажатие minus обнуляет голос
-    pp @vote
-    pp @votable
     @vote.value = @vote.value.zero? ? -1 : 0
   end
 

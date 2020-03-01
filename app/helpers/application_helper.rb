@@ -13,13 +13,13 @@ module ApplicationHelper
   end
 
   def vote_positive_link(votable)
-    link_to 'plus', polymorphic_path([:voting, votable], option: 'positive'),
+    link_to 'plus', polymorphic_path([:vote, votable], option: 'positive'),
               class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-change-link'}",
               data: { votable_type: votable.class.to_s.underscore ,votable_id: votable.id, type: :json }, remote: true, method: :patch
   end
 
   def vote_negative_link(votable)
-    link_to 'minus', polymorphic_path([:voting, votable], option: 'negative'),
+    link_to 'minus', polymorphic_path([:vote, votable], option: 'negative'),
               class: "#{current_user&.is_author?(votable) ? 'hidden' : 'vote-change-link'}",
               data: { votable_type: votable.class.to_s.underscore ,votable_id: votable.id, type: :json }, remote: true, method: :patch
   end
