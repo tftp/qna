@@ -8,8 +8,8 @@ RSpec.describe QuestionsController, type: :controller do
 
 
   describe 'Voted' do
-    let(:votable) { question }
-    let(:votable_user) { create(:question, user: user) }
+    let!(:votable) { question }
+    let!(:votable_user) { create(:question, user: user) }
     it_behaves_like 'voted'
   end
 
