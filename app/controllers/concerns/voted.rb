@@ -2,11 +2,11 @@ module Voted
   extend ActiveSupport::Concern
 
   def vote
-    set_votable
-    set_vote
-    voting_process(params[:option])
+    @votable = model_klass.find(params[:id])
+    @vote = find_votable(@votable) ? find_votable(@votable) : @votable.votes.build(user: current_user)
+    counts_voice(params[:option])
     if !current_user.is_author?(@votable) && @vote.save
-       render json: @votable.count_votes
+       render json: @votable.rating
     else
        render json:'Unprocessable Entity', status: 422
     end
@@ -14,9 +14,9 @@ module Voted
 
   private
 
-  def voting_process(option)
-    positive if option.eql? 'positive'
-    negative if option.eql? 'negative'
+  def counts_voice(option)
+    positive if option == 'positive'
+    negative if option == 'negative'
   end
 
   def positive
@@ -31,14 +31,6 @@ module Voted
 
   def model_klass
     controller_name.classify.constantize
-  end
-
-  def set_votable
-    @votable = model_klass.find(params[:id])
-  end
-
-  def set_vote
-    @vote = find_votable(@votable) ? find_votable(@votable) : @votable.votes.build(user: current_user)
   end
 
   def find_votable(votable)
