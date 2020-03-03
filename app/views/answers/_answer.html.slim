@@ -2,6 +2,8 @@
   .col-1
     -if current_user&.is_author?(answer.question)
       =button_best(answer)
+  -if user_signed_in?
+    = render 'shared/vote', resource: answer
 
   .col-4 class="alert alert-secondary"
     = content_tag :span, class: 'answer', data: { answer_id: answer.id }

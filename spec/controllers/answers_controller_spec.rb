@@ -6,6 +6,12 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question, user: author) }
   let(:question_somebody) { create(:question, user: user) }
 
+  describe 'Voted' do
+    let(:votable) { create(:answer, question: question, user: author) }
+    let(:votable_user) { create(:answer, question: question, user: user) }
+    it_behaves_like 'voted'
+  end
+
   describe 'GET #new' do
     context 'as authenticate_user' do
       before { login(author) }
