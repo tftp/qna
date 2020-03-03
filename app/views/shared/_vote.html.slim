@@ -1,10 +1,10 @@
 .col-1.alert.alert-secondary
   p= link_to 'plus', polymorphic_path([:vote, resource], option: 'positive'),
-                class: "#{current_user&.is_author?(resource) ? 'hidden' : 'vote-change-link'}",
+                class: current_user&.is_author?(resource) ? 'hidden' : 'vote-change-link',
                 data: { votable_type: resource.class.to_s.underscore ,votable_id: resource.id, type: :json }, remote: true, method: :patch
 
   p= content_tag :div, "#{resource.rating}", class: "vote-mark-#{resource.class.to_s.underscore}", id: "#{resource.id}"
 
   p= link_to 'minus', polymorphic_path([:vote, resource], option: 'negative'),
-            class: "#{current_user&.is_author?(resource) ? 'hidden' : 'vote-change-link'}",
+            class: current_user&.is_author?(resource) ? 'hidden' : 'vote-change-link',
             data: { votable_type: resource.class.to_s.underscore ,votable_id: resource.id, type: :json }, remote: true, method: :patch

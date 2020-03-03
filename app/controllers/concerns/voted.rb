@@ -4,7 +4,9 @@ module Voted
   def vote
     @votable = model_klass.find(params[:id])
     @vote = find_votable(@votable) ? find_votable(@votable) : @votable.votes.build(user: current_user)
-    counts_voice(params[:option])
+    (@vote.value = @vote.value.zero? ? 1 : 0) if params[:option] == 'positive'
+    (@vote.value = @vote.value.zero? ? -1 : 0) if params[:option] == 'negative'
+
     if !current_user.is_author?(@votable) && @vote.save
        render json: @votable.rating
     else
@@ -13,21 +15,6 @@ module Voted
   end
 
   private
-
-  def counts_voice(option)
-    positive if option == 'positive'
-    negative if option == 'negative'
-  end
-
-  def positive
-    # повторное нажатие plus обнуляет голос
-    @vote.value = @vote.value.zero? ? 1 : 0
-  end
-
-  def negative
-    # повторное нажатие minus обнуляет голос
-    @vote.value = @vote.value.zero? ? -1 : 0
-  end
 
   def model_klass
     controller_name.classify.constantize
