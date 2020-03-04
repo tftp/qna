@@ -6,3 +6,11 @@ $(document).on('turbolinks:load', function(){
     $('form#edit-answer-' + answerId).show();
   })
 });
+
+import consumer from "./consumer"
+
+consumer.subscriptions.create({ channel: "AnswersChannel", id: gon.question_id },{
+  received(data) {
+    $('.answers').append(data)
+  }
+})

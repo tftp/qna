@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   include Voted
 
   before_action :authenticate_user!
+  after_action :publish_answer, only: [:create]
 
   def new
     @answer = Answer.new
@@ -19,6 +20,7 @@ class AnswersController < ApplicationController
     @answer.question = @question
     @answer.save
 
+
   end
 
   def destroy
@@ -32,6 +34,14 @@ class AnswersController < ApplicationController
   end
 
   private
+
+  def publish_answer
+    return if @answer.errors.any?
+    ActionCable.server.broadcast(
+     "answers#{@question.id}",
+     @answer.to_json
+   )
+  end
 
   def answer_params
     params.require(:answer).permit(:body,
