@@ -1,0 +1,21 @@
+<script id="answer-template" type="text/x-handlebars-template">
+  <div class="row row-answer" data-answer-id={{answer_id}}>
+
+    <div class="col-1 alert alert-secondary">
+      <p>
+        <a class="vote-change-link" data-votable-type="answer" data-votable-id="{{answer_id}}" data-type="json" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer_id}}/vote?option=positive">plus</a>
+      </p>
+      <p>
+        <div class="vote-mark-answer" id="{{answer_id}}">{{answer_rating}}</div>
+      </p>
+      <p>
+        <a class="vote-change-link" data-votable-type="answer" data-votable-id="{{answer_id}}" data-type="json" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer_id}}/vote?option=negative">minus</a>        
+      </p>
+    </div>
+
+    <div class="col-4 alert alert-secondary">
+      <span class="answer" data-answer-id={{answer_id}}>{{answer_body}}</span>
+    </div>
+
+  </div>
+</script>
