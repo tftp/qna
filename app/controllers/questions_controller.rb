@@ -17,6 +17,7 @@ class QuestionsController < ApplicationController
 
   def new
     question.links.build
+    question.comments.build
   end
 
   def edit

@@ -7,6 +7,7 @@ class User < ApplicationRecord
  has_many :questions, dependent: :destroy
  has_many :answers, dependent: :destroy
  has_many :votes, dependent: :destroy
+ has_many :comments, dependent: :destroy
 
  validates :email, format: { with: /\A\w+@\w+\.[a-z]{2,3}\z/}
 
