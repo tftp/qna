@@ -12,6 +12,7 @@ class QuestionsController < ApplicationController
     @answer.links.build
     @question = Question.with_attached_files.find(params[:id])
     gon.question_id = @question.id
+    gon.question_author_id = @question.user_id
   end
 
   def new

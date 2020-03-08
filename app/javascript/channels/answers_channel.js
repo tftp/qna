@@ -11,8 +11,14 @@ $(document).on('turbolinks:load', function(){
 
   consumer.subscriptions.create({ channel: "AnswersChannel", id: gon.question_id },{
     received(data) {
+      this.addAnswer(data);
+    },
+    addAnswer(data){
+      if (gon.user_id == data.answer.user_id) return;
       var template = Handlebars.compile( $('#answer-template').html() );
-      document.querySelector('.answers').insertAdjacentHTML('beforeEnd', template(data));
+      data.is_question_author = gon.user_id == gon.question_author_id;
+      data.question_id = gon.question_id
+      $('.answers').append(template(data));
     }
   })
 
