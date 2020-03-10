@@ -35,7 +35,7 @@ gem 'bootstrap', '~> 4.4.1'
 gem "aws-sdk-s3", require: false
 gem "cocoon"
 gem "gon"
-gem "skim"
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
