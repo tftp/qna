@@ -1,0 +1,13 @@
+<% if @comment.commentable_type == 'Answer'%>
+  <% if @comment.persisted? %>
+    $(".comments-answer-"+<%= @comment.commentable_id %>).before('<%= j render 'comments/comment', comment: @comment %>')
+    $(".comment-answer-form-"+<%= @comment.commentable_id %>).html('<%= j render 'comments/form', resource: Comment.new, url: answer_comments_path(@comment.commentable_id) %>')
+  <% end %>
+<% end %>
+
+<% if @comment.commentable_type == 'Question'%>
+  <% if @comment.persisted? %>
+    $(".comments-question").before('<%= j render 'comments/comment', comment: @comment %>')
+    $(".comment-question-form").html('<%= j render 'comments/form', resource: Comment.new, url: question_comments_path(@comment.commentable_id) %>')
+  <% end %>
+<% end %>

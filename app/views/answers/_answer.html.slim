@@ -10,13 +10,13 @@
       = answer.body
       = render 'shared/link', resourse: answer
 
-      .answer-comments
+      p Comments:
+      div class="comments-answer-#{answer.id}"
         - if answer.comments.any?
-          p Comments:
           = render answer.comments
 
       - if user_signed_in?
-        div class="answer-comment-form" id="#{answer.id}"
+        div class="comment-answer-form-#{answer.id}"
           = render 'comments/form', resource: Comment.new, url: answer_comments_path(answer)
 
       - if answer.files.attached?

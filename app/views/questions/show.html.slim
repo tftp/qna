@@ -11,13 +11,13 @@
         = render @question.files
       = render 'shared/link', resourse: @question
 
-      .question-comments
+      p Comments:
+      div class="comments-question"
         - if question.comments.any?
-          p Comments:
           = render question.comments
 
       - if user_signed_in?
-        div class="question-comment-form" id="#{@question.id}"
+        div class="comment-question-form"
           = render 'comments/form', resource: Comment.new, url: question_comments_path(@question)
 
       = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
