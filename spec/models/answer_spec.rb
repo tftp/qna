@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
   include_examples "Linkable"
+  include_examples "Commentable"
 
   it { should belong_to(:question) }
   it { should belong_to(:user) }
