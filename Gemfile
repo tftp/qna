@@ -43,6 +43,7 @@ group :development, :test do
 #  gem 'rspec-rails', '~> 3.8'
   gem 'rspec-rails', '4.0.0.beta3'
   gem 'factory_bot_rails'
+  gem 'action-cable-testing'
 end
 
 group :development do
