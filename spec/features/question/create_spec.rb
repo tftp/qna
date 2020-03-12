@@ -43,8 +43,7 @@ feature 'User can create question', %q{
     end
   end
 
-  #тест в rails 6 не проходит
-  context "multiple session" do
+  context "multiple session", js: true do
     scenario "question appears on another user's page" do
       Capybara.using_session('user') do
         sign_in(user)

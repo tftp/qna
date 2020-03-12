@@ -47,4 +47,30 @@ feature 'User can fill form answer', %q{
     expect(page).to_not have_content 'Body'
     expect(page).to_not have_content 'Reply'
   end
+
+  describe 'multiple sessions', js: true do
+    scenario 'answer appears on another users page' do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('quest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        within '.answers_form' do
+          fill_in 'Body', with: 'NewAnswer'
+          click_on 'Reply'
+        end
+
+        expect(page).to have_content 'NewAnswer'
+      end
+
+      Capybara.using_session('quest') do
+        expect(page).to have_content 'NewAnswer'
+      end
+    end
+  end
 end
