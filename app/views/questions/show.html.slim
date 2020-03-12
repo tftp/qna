@@ -17,6 +17,7 @@
           = render question.comments
 
       - if user_signed_in?
+        .errors-comment-question-form
         div class="comment-question-form"
           = render 'comments/form', resource: Comment.new, url: question_comments_path(@question)
 

@@ -16,6 +16,7 @@
           = render answer.comments
 
       - if user_signed_in?
+        div class="errors-comment-answer-form-#{answer.id}"
         div class="comment-answer-form-#{answer.id}"
           = render 'comments/form', resource: Comment.new, url: answer_comments_path(answer)
 
