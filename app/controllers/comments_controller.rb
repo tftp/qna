@@ -18,11 +18,7 @@ class CommentsController < ApplicationController
   end
 
   def question_id
-    if commentable.class == Question
-      commentable.id
-    else
-      commentable.question.id
-    end
+    commentable.respond_to?(:question_id) ? commentable.question.id : commentable.id
   end
 
   def comment_params

@@ -13,8 +13,7 @@
 
       p Comments:
       div class="comments-question"
-        - if question.comments.any?
-          = render question.comments
+        = render question.comments
 
       - if user_signed_in?
         .errors-comment-question-form

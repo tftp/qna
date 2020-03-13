@@ -3,6 +3,7 @@ require 'rails_helper'
 feature 'User can create comment' do
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
+  given(:question_two) { create(:question, user: user) }
   given!(:answer_first) { create(:answer, question: question, user: user) }
   given!(:answer_second) { create(:answer, question: question, user: user) }
 
@@ -67,6 +68,30 @@ feature 'User can create comment' do
 
       Capybara.using_session('quest') do
         expect(page).to have_content 'AnswerFirst'
+      end
+    end
+
+    scenario 'comment to answer not appears on another question page' do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('quest') do
+        visit question_path(question_two)
+      end
+
+      Capybara.using_session('user') do
+        within ".row-answer[data-answer-id='#{answer_first.id}']" do
+          find(".comment-answer-form-#{answer_first.id}").fill_in 'comment_body', with: "AnswerFirst"
+          click_on 'Add comment'
+
+          expect(page).to have_content 'AnswerFirst'
+        end
+      end
+
+      Capybara.using_session('quest') do
+        expect(page).to_not have_content 'AnswerFirst'
       end
     end
   end

@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   private
 
   def gon_user
-    gon.user_id = current_user.id if current_user
-    gon.user_signed_in = current_user ? true : false
+    gon.user_id = current_user&.id
   end
 end

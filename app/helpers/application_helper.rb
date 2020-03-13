@@ -7,5 +7,4 @@ module ApplicationHelper
       link_to link.name, link.url
     end
   end
-
 end

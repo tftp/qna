@@ -3,6 +3,7 @@ require 'rails_helper'
 feature 'User can create comment' do
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
+  given(:question_two) { create(:question, user: user) }
 
   describe 'Authenticated user', js: true do
     background do
@@ -56,6 +57,30 @@ feature 'User can create comment' do
 
       Capybara.using_session('quest') do
         expect(page).to have_content 'By-by'
+      end
+    end
+
+    scenario 'comment to answer not appears on another question page' do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('quest') do
+        visit question_path(question_two)
+      end
+
+      Capybara.using_session('user') do
+        within '.question' do
+          find('.comment-question-form').fill_in 'comment_body', with: "By-by"
+          click_on 'Add comment'
+
+          expect(page).to have_content 'By-by'
+          end
+      end
+
+      Capybara.using_session('quest') do
+        expect(page).to_not have_content 'By-by'
       end
     end
   end
