@@ -4,4 +4,13 @@ $(document).on('turbolinks:load', function(){
     $(this).hide();
     $('form#edit-question').show();
   })
+
 });
+
+import consumer from "./consumer"
+
+consumer.subscriptions.create("QuestionsChannel",{
+  received(data) {
+    $('.questions').append(data)
+  }
+})

@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Question, type: :model do
   include_examples "Linkable"
+  include_examples "Commentable"
 
   it { should have_many(:answers).dependent(:destroy) }
   it { should belong_to(:user) }

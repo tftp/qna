@@ -34,6 +34,8 @@ gem 'octicons_helper'
 gem 'bootstrap', '~> 4.4.1'
 gem "aws-sdk-s3", require: false
 gem "cocoon"
+gem "gon"
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -41,6 +43,7 @@ group :development, :test do
 #  gem 'rspec-rails', '~> 3.8'
   gem 'rspec-rails', '4.0.0.beta3'
   gem 'factory_bot_rails'
+  gem 'action-cable-testing'
 end
 
 group :development do

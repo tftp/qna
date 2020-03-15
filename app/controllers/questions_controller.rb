@@ -2,6 +2,7 @@ class QuestionsController < ApplicationController
   include Voted
 
   before_action :authenticate_user!, except: [:index, :show]
+  after_action :publish_question, only: [:create]
   def index
     @questions = Question.all
   end
@@ -10,10 +11,13 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @answer.links.build
     @question = Question.with_attached_files.find(params[:id])
+    gon.question_id = @question.id
+    gon.question_author_id = @question.user_id
   end
 
   def new
     question.links.build
+    question.comments.build
   end
 
   def edit
@@ -41,6 +45,17 @@ class QuestionsController < ApplicationController
   helper_method :question
 
   private
+
+  def publish_question
+    return if @question.errors.any?
+    ActionCable.server.broadcast(
+     'questions',
+     ApplicationController.render(
+       partial: 'questions/question',
+       locals: { question: @question }
+     )
+   )
+  end
 
   def question
     @question ||= params[:id] ? Question.find(params[:id]) : Question.new
