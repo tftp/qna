@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: [:github, :facebook, :twitter]
+         :omniauthable, omniauth_providers: [:github, :facebook]
 
  has_many :questions, dependent: :destroy
  has_many :answers, dependent: :destroy
@@ -15,10 +15,6 @@ class User < ApplicationRecord
 
  def is_author?(obj)
    id == obj.user_id
- end
-
- def self.find_for_oauth(auth)
-   Services::FindForOauth.new(auth).call
  end
 
 end

@@ -27,4 +27,7 @@ Rails.application.routes.draw do
   resources :questions, concerns: %i[votable commentable]
   resources :answers, concerns: %i[votable commentable]
 
+  resources :authorizations, only: %i[new create]
+  patch 'authorizations/confirmable', to: 'authorizations#confirmable'
+
 end

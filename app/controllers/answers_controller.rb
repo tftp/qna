@@ -19,8 +19,6 @@ class AnswersController < ApplicationController
     @answer = current_user.answers.build(answer_params)
     @answer.question = @question
     @answer.save
-
-
   end
 
   def destroy

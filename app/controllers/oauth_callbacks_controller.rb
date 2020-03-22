@@ -10,10 +10,35 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def facebook
-    render json: request.env['omniauth.auth']
+    @authorization = Services::FindForOauth.new(request.env['omniauth.auth']).call
+    if request.env['omniauth.auth'].info[:email]
+      continue_authentication_with_email(@authorization,'Facebook')
+    else
+      continue_authentication_without_email(@authorization,'Facebook')
+    end
   end
 
-  def twitter
-    render json: request.env['omniauth.auth']
+  private
+
+  def continue_authentication_with_email(authorization, kind)
+    @user = authorization.user
+    if @user&.persisted?
+      sign_in_and_redirect @user, event: :authentication
+      set_flash_message(:notice, :success, kind: kind) if is_navigational_format?
+    else
+      redirect_to root_path, alert: 'Something went wrong'
+    end
+  end
+
+  def continue_authentication_without_email(authorization, kind)
+    if authorization&.confirmation_at?
+      @user = authorization.user
+      sign_in_and_redirect @user, event: :authentication
+      set_flash_message(:notice, :success, kind: kind) if is_navigational_format?
+    else
+      session[:provider] = request.env['omniauth.auth'].provider
+      session[:uid] = request.env['omniauth.auth'].uid
+      redirect_to new_authorization_path
+    end
   end
 end

@@ -1,6 +1,6 @@
 class Authorization < ApplicationRecord
   belongs_to :user
 
-  validates :provider, presence: true
-  validates :uid, presence: true
+  validates :uid, :confirmation_token, :provider, presence: true
+
 end

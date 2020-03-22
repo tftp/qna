@@ -6,13 +6,13 @@ RSpec.describe Services::FindForOauth do
     subject { Services::FindForOauth.new(auth) }
 
     context 'user alredy has authorization' do
-      it 'returns the user' do
-        user.authorizations.create(provider: 'facebook', uid: '12345')
-        expect(subject.call).to eq user
+      let!(:authorization) { create(:authorization, user: user, provider: 'facebook', uid: '12345') }
+      it 'returns the users authorization' do
+        expect(subject.call).to eq user.authorizations.last
       end
     end
 
-    context 'user has not authorization' do
+    context 'user has not authorization and OmniAuths response has email' do
       context 'user alredy exists' do
         let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '12345', info: { email: user.email }) }
 
@@ -24,15 +24,15 @@ RSpec.describe Services::FindForOauth do
           expect { subject.call }.to change(user.authorizations, :count).by(1)
         end
 
-        it 'create authorization with provider ans id' do
-          authorization = subject.call.authorizations.first
+        it 'create authorization with provider and id' do
+          authorization = subject.call
 
           expect(authorization.provider).to eq auth.provider
           expect(authorization.uid).to eq auth.uid
         end
 
-        it 'returns the user' do
-          expect(subject.call).to eq user
+        it 'returns the authorization' do
+          expect(subject.call).to be_a(Authorization)
         end
       end
 
@@ -43,27 +43,34 @@ RSpec.describe Services::FindForOauth do
           expect { subject.call }.to change(User, :count).by(1)
         end
 
-        it 'returns new user' do
-          expect(subject.call).to be_a(User)
+        it 'returns authorization' do
+          expect(subject.call).to be_a(Authorization)
         end
 
-        it 'fills user email' do
-          user = subject.call
-          expect(user.email).to eq auth.info[:email]
-        end
-
-        it 'creates authorization for user' do
-          user = subject.call
-          expect(user.authorizations).to_not be_empty
+        it 'authorization has the user with his email' do
+          authorization = subject.call
+          expect(authorization.user.email).to eq auth.info[:email]
         end
 
         it 'creates authorization with provider and uid' do
-          authorization = subject.call.authorizations.first
+          authorization = subject.call
 
           expect(authorization.provider).to eq auth.provider
           expect(authorization.uid).to eq auth.uid
         end
       end
     end
+  context 'user has not authorization and OmniAuths response has not email' do
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '12345') }
 
+    it 'return authorization has nil' do
+      authorization = subject.call
+
+      expect(authorization).to eq nil
+    end
+
+    it 'to not create new user' do
+      expect { subject.call }.to_not change(User, :count)
+    end
+  end
 end

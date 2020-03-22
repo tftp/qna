@@ -2,25 +2,26 @@ require 'rails_helper'
 
 RSpec.describe OauthCallbacksController, type: :controller do
   before do
-    @request.env["devise.mapping"] = Devise.mappings[:user]
+#    @request.env["devise.mapping"] = Devise.mappings[:user]
   end
 
-  describe 'Github' do
-    let(:oauth_data) { { 'provider' => 'github', 'uid' => 123 } }
+  describe 'Provider with email' do
+    let!(:oauth_data) { { 'provider' => 'facebook', 'uid' => 12345, 'info' => { 'email' => 'user@qna.com' } } }
 
     it 'finds user from oauth data' do
-      allow(request.env).to receive(:[]).and_call_original
-      allow(request.env).to receive(:[]).with('omniauth.auth').and_return(oauth_data)
-      expect(User).to receive(:find_for_oauth).with(oauth_data)
-      get :github
+#      allow(request.env).to receive(:[]).and_call_original
+#      allow(request.env).to receive(:[]).with('omniauth.auth').and_return(oauth_data)
+      expect(Services::FindForOauth).to receive(:new).with(oauth_data).and_return(FindForOauth)
+      get :facebook
     end
 
-    context 'user exist' do
-      let!(:user) { create(:user) }
+    context 'authorization exist' do
+      let(:user) { create(:user) }
+      let!(:authorization) { create(:authorization, user: user, provider: 'facebook', uid: '12345') }
 
       before do
-        allow(User).to receive(:find_for_oauth).and_return(user)
-        get :github
+        allow(Services::FindForOauth).to receive(:new).with(oauth_data).and_return(authorization)
+        get :facebook
       end
 
       it 'login user if it exists' do
