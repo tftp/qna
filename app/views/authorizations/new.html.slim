@@ -1,0 +1,9 @@
+.user-errors
+  = render 'shared/errors', resource: @user
+.row
+  .col-5 class="alert alert-secondary"
+    = form_with(url: authorizations_path, method: :post, local: true) do |f|
+      .form-group
+        = f.label 'Email'
+        = f.text_field :email, class: "form-control"
+        = f.submit 'Reply', class: 'btn btn-secondary btn-sm'
