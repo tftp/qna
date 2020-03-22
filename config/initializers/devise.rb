@@ -268,10 +268,6 @@ Devise.setup do |config|
                    Rails.application.credentials[Rails.env.to_sym][:facebook][:app_id],
                    Rails.application.credentials[Rails.env.to_sym][:facebook][:app_secret],
                     scope: 'email'
-  config.omniauth :twitter,
-                   Rails.application.credentials[Rails.env.to_sym][:twitter][:app_id],
-                   Rails.application.credentials[Rails.env.to_sym][:twitter][:app_secret]
-
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

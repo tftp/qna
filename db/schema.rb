@@ -58,15 +58,6 @@ ActiveRecord::Schema.define(version: 2020_03_16_173441) do
     t.index ["user_id"], name: "index_authorizations_on_user_id"
   end
 
-  create_table "badges", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "badgeable_type"
-    t.bigint "badgeable_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["badgeable_type", "badgeable_id"], name: "index_badges_on_badgeable_type_and_badgeable_id"
-  end
-
   create_table "comments", force: :cascade do |t|
     t.text "body", null: false
     t.string "commentable_type"
