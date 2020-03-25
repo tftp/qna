@@ -1,6 +1,6 @@
 = content_tag :div, class: 'row row-answer', data: { answer_id: answer.id }
   .col-1
-    -if current_user&.is_author?(answer.question)
+    -if can?(:best, answer)
       =button_best(answer)
   -if user_signed_in?
     = render 'shared/vote', resource: answer
@@ -14,7 +14,7 @@
       div class="comments-answer-#{answer.id}"
         = render answer.comments
 
-      - if user_signed_in?
+      - if can?(:create, Comment)
         div class="errors-comment-answer-form-#{answer.id}"
         div class="comment-answer-form-#{answer.id}"
           = render 'comments/form', resource: Comment.new, url: answer_comments_path(answer)
@@ -32,7 +32,7 @@
 
           = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
-  -if current_user&.is_author?(answer)
+  -if can?(:edit, answer)
     .col-1
       = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     .col-1

@@ -43,7 +43,8 @@ RSpec.describe AttachmentsController, type: :controller do
       it 'redirects to question view if fail of questions file delete' do
         delete :destroy, params: { id: file_for_delete }
 
-        expect(response).to redirect_to question_path(question_user)
+        # исправил root_path. т.к. cancan образует исключение и перенаправление на этот путь
+        expect(response).to redirect_to root_path
       end
     end
 

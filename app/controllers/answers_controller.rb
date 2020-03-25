@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   include Voted
 
   before_action :authenticate_user!
+  before_action :load_answer, only: [ :update, :destroy, :best ]
   after_action :publish_answer, only: [:create]
 
   authorize_resource
@@ -11,8 +12,7 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answer = Answer.find(params[:id])
-    @answer.update(answer_params) if current_user.is_author?(@answer)
+    @answer.update(answer_params)
     @question = @answer.question
   end
 
@@ -21,21 +21,22 @@ class AnswersController < ApplicationController
     @answer = current_user.answers.build(answer_params)
     @answer.question = @question
     @answer.save
-
-
   end
 
   def destroy
-    @answer = Answer.find(params[:id])
-    @answer.destroy if current_user.is_author?(@answer)
+    @answer.destroy
   end
 
   def best
-    @answer = Answer.find(params[:id])
-    @answer.set_as_best! if current_user.is_author?(@answer.question)
+    authorize! :best, @answer
+    @answer.set_as_best!
   end
 
   private
+
+  def load_answer
+    @answer = Answer.find(params[:id])
+  end
 
   def publish_answer
     return if @answer.errors.any?

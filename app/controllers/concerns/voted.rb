@@ -7,7 +7,7 @@ module Voted
     (@vote.value = @vote.value.zero? ? 1 : 0) if params[:option] == 'positive'
     (@vote.value = @vote.value.zero? ? -1 : 0) if params[:option] == 'negative'
 
-    if !current_user.is_author?(@votable) && @vote.save
+    if can?(:vote, @votable) && @vote.save
        render json: @votable.rating
     else
        render json:'Unprocessable Entity', status: 422

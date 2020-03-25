@@ -37,12 +37,13 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    question.update(question_params) if current_user.is_author?(question)
+    question.update(question_params)
   end
 
   def destroy
-    question.destroy if current_user.is_author?(question)
-    redirect_to questions_path
+    authorize! :destroy, question
+    question.destroy
+    redirect_to root_path
   end
 
   helper_method :question

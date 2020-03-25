@@ -15,7 +15,7 @@
       div class="comments-question"
         = render question.comments
 
-      - if user_signed_in?
+      - if can?(:create, Comment)
         .errors-comment-question-form
         div class="comment-question-form"
           = render 'comments/form', resource: Comment.new, url: question_comments_path(@question)
@@ -32,7 +32,7 @@
 
           = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
-    - if current_user&.is_author?(question)
+    - if can?(:update, question)
       .col-1.alert.alert-secondary
         p= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
         p= link_to 'Delete', question_path(question), method: :delete
@@ -42,7 +42,7 @@
   = render @question.answers.with_attached_files
 
 .answers_form
-  -if user_signed_in?
+  -if can?(:create, Answer)
     = render 'answers/form'
 
 = link_to 'Back', root_path

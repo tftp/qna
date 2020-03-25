@@ -20,29 +20,58 @@ RSpec.describe Ability, type: :model do
   end
 
   describe 'for user' do
-    let(:user) { create(:user) }
     let(:other) { create(:user) }
+    let(:user) { create(:user) }
     let(:question_user) { create(:question, user: user) }
     let(:question_other) { create(:question, user: other) }
     let(:answer_user) { create(:answer, question: question_user, user: user) }
-    let(:answer_other) { create(:answer, question: question_user, user: other) }
+    let(:answer_other) { create(:answer, question: question_other, user: other) }
     let(:comment_user) { create(:comment, commentable: question_user, user: user) }
     let(:comment_other) { create(:comment, commentable: question_user, user: other) }
+    let(:file) { create_file_blob('rails_helper.rb') }
+    let(:attachment_user) do
+      question_user.files.attach(file)
+      question_user.files.last
+    end
+    let(:attachment_other) do
+      question_other.files.attach(file)
+      question_other.files.last
+    end
+
 
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
 
-    it {should be_able_to :create, Question}
-    it {should be_able_to :create, Answer}
-    it {should be_able_to :create, Comment}
+    context 'for Question' do
+      it { should be_able_to :create, Question }
+      it { should be_able_to :update, question_user }
+      it { should_not be_able_to :update, question_other }
+      it { should be_able_to :destroy, question_user }
+      it { should_not be_able_to :destroy, question_other }
+      it { should be_able_to :vote, question_other }
+      it { should_not be_able_to :vote, question_user }
+    end
 
-    it { should be_able_to :update, question_user }
-    it { should_not be_able_to :update, question_other }
+    context 'for Answer' do
+      it { should be_able_to :create, Answer }
+      it { should be_able_to :update, answer_user }
+      it { should_not be_able_to :update, answer_other }
+      it { should be_able_to :destroy, answer_user }
+      it { should_not be_able_to :destroy, answer_other }
+      it { should be_able_to :vote, answer_other }
+      it { should_not be_able_to :vote, answer_user }
+      it { should be_able_to :best, answer_user }
+      it { should_not be_able_to :best, answer_other }
+    end
 
-    it { should be_able_to :update, answer_user }
-    it { should_not be_able_to :update, answer_other }
+    context 'for Comment' do
+      it { should be_able_to :create, Comment }
+    end
 
-    it { should be_able_to :update, comment_user }
-    it { should_not be_able_to :update, comment_other }
+    context 'for Attachment' do
+      it { should be_able_to :destroy, attachment_user }
+      it { should_not be_able_to :destroy, attachment_other }
+    end
+
   end
 end
