@@ -6,7 +6,8 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exeption|
     respond_to do |format|
       format.html { redirect_to root_url, alert: exeption.message }
-      format.js { render nothing: true, status: :not_found }
+      format.js { render nothing: true, status: :forbidden }
+      format.json { head :forbidden }
     end
   end
 

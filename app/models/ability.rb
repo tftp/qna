@@ -31,7 +31,7 @@ class Ability
     can :create, Question
     can [:update, :destroy], Question, user_id: @user.id
     can :vote, Question do |question|
-       question.user_id != @user.id
+       !@user.is_author?(question)
      end
 
     # set_rules_for_answer
@@ -39,7 +39,7 @@ class Ability
     can [:update, :destroy], Answer, user_id: @user.id
     can :best, Answer, question: { user_id: @user.id }
     can :vote, Answer do |answer|
-       answer.user_id != @user.id
+       !@user.is_author?(answer)
      end
 
     # set_rules_for_comment
