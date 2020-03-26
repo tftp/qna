@@ -12,9 +12,10 @@ feature 'User can delete question', %q{
 
   scenario 'Authenticated user can delete self question' do
     sign_in(author)
-    visit questions_path
+    visit question_path(question)
 
     expect(page).to have_content question.title
+
     click_on 'Delete'
 
     expect(page).to_not have_content question.title
@@ -22,7 +23,7 @@ feature 'User can delete question', %q{
 
   scenario 'Authenticated user can not delete somebody question' do
     sign_in(somebody)
-    visit questions_path
+    visit question_path(question)
 
     expect(page).to_not have_content 'Delete'
   end

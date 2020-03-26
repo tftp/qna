@@ -28,7 +28,9 @@ feature 'User can delete answer', %q{
     sign_in(somebody)
     visit question_path(question)
 
-    expect(page).to_not have_content 'Delete'
+    within '.answers' do
+      expect(page).to_not have_content 'Delete'
+    end
   end
 
   scenario 'Unauthenticated user can not delete answer', js: true do

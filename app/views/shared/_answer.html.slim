@@ -1,6 +1,6 @@
 = content_tag :div, class: 'row row-answer', data: { answer_id: answer.id }
   .col-1
-    -if current_user&.is_author?(answer.question)
+    -if can?(:best, answer)
       =button_best(answer)
 
   .col-4 class="alert alert-secondary"
@@ -21,7 +21,7 @@
 
           = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
-  -if current_user&.is_author?(answer)
+  -if can?(:update, answer)
     .col-1
       = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     .col-1

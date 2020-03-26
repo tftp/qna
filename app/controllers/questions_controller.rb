@@ -3,6 +3,9 @@ class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: [:index, :show]
   after_action :publish_question, only: [:create]
+
+  authorize_resource
+
   def index
     @questions = Question.all
   end
@@ -34,12 +37,13 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    question.update(question_params) if current_user.is_author?(question)
+    question.update(question_params)
   end
 
   def destroy
-    question.destroy if current_user.is_author?(question)
-    redirect_to questions_path
+    authorize! :destroy, question
+    question.destroy
+    redirect_to root_path
   end
 
   helper_method :question
