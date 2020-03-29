@@ -18,6 +18,10 @@ class Ability
 
   def quest_ability
     can :read, :all
+    
+    # set_rules_for_user_REST_API
+    can :me, User
+
   end
 
   def admin_ability
