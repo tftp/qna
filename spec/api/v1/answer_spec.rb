@@ -1,34 +1,35 @@
 require 'rails_helper'
 
-RSpec.describe 'Question API', type: :request do
+RSpec.describe 'Answers API', type: :request do
   let(:headers) { { "CONTENT-TYPE" => "application/json",
                     "ACCEPT" => 'application/json'} }
 
-  describe 'GET /api/v1/question/:id' do
+  describe 'GET /api/v1/questions/:question_id/answers/:id' do
     let(:user) { create(:user) }
-    let!(:question) { create(:question, user: user) }
+    let(:question) { create(:question, user: user) }
+    let!(:answer) { create(:answer, question: question, user: user) }
 
     context 'unauthorized' do
       it 'returns 401 status if there is not access_token' do
-        get "/api/v1/questions/#{question.id}", headers: headers
+        get "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { id: answer.id, question_id: question.id }, headers: headers
         expect(response.status).to eq 401
       end
       it 'returns 401 status if access_token is invalid' do
-        get "/api/v1/questions/#{question.id}", params: { access_token: '1234' }, headers: headers
+        get "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { id: answer.id, question_id: question.id, access_token: '1234' }, headers: headers
         expect(response.status).to eq 401
       end
     end
 
     context 'authorize' do
       let(:access_token) { create(:access_token) }
-      let(:question_response) { json['question'] }
-      let!(:comments) { create_list(:comment, 2, commentable: question, user: user) }
-      let!(:links) { create_list(:link, 2, linkable: question) }
+      let(:answer_response) { json['answer'] }
+      let!(:comments) { create_list(:comment, 2, commentable: answer, user: user) }
+      let!(:links) { create_list(:link, 2, linkable: answer) }
       let(:file_for_attach) { create_file_blob('rails_helper.rb') }
 
       before do
-        question.files.attach(file_for_attach)
-        get "/api/v1/questions/#{question.id}", params: { access_token: access_token.token }, headers: headers
+        answer.files.attach(file_for_attach)
+        get "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { id: answer.id, question_id: question.id, access_token: access_token.token }, headers: headers
       end
 
       it 'returns 200 status' do
@@ -36,17 +37,17 @@ RSpec.describe 'Question API', type: :request do
       end
 
       it 'returns all public fields' do
-        %w[title body created_at updated_at].each do |attr|
-          expect(question_response[attr]).to eq question.send(attr).as_json
+        %w[id body created_at updated_at user_id].each do |attr|
+          expect(answer_response[attr]).to eq answer.send(attr).as_json
         end
       end
 
       describe 'comments' do
         let(:comment) { comments.last }
-        let(:comment_response) { question_response['comments'].first }
+        let(:comment_response) { answer_response['comments'].first }
 
         it 'returns list of comments' do
-          expect(question_response['comments'].size).to eq 2
+          expect(answer_response['comments'].size).to eq 2
         end
 
         it 'returns all public fields' do
@@ -58,10 +59,10 @@ RSpec.describe 'Question API', type: :request do
 
       describe 'links' do
         let(:link) { links.last }
-        let(:link_response) { question_response['links'].first }
+        let(:link_response) { answer_response['links'].first }
 
         it 'returns list of links' do
-          expect(question_response['links'].size).to eq 2
+          expect(answer_response['links'].size).to eq 2
         end
 
         it 'returns all public fields' do
@@ -72,8 +73,8 @@ RSpec.describe 'Question API', type: :request do
       end
 
       describe 'attached files' do
-        let(:file) { question.files.last }
-        let(:file_response) { question_response['files_url'] }
+        let(:file) { answer.files.last }
+        let(:file_response) { answer_response['files_url'] }
 
         it 'returns list of files' do
           expect(file_response.size).to eq 1
