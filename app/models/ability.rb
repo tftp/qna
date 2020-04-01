@@ -31,7 +31,7 @@ class Ability
     quest_ability
 
     # set_rules_for_user_REST_API
-    #can :show, User
+    can :create, User
 
     # set_rules_for_question
     can :create, Question

@@ -1,7 +1,7 @@
 class QuestionSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :id, :title, :body, :created_at, :updated_at, :files_url
+  attributes :id, :title, :body, :user_id, :created_at, :updated_at, :files_url
 
   has_many :comments
   has_many :links
