@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :link do
-    name { "MyString" }
-    url { "MyString" }
+    sequence (:name) { |n| "MyProject_#{n}" }
+    sequence (:url) { |n| "https://myprojects.ru/#{n}" }
 
     trait :google do
       name { "Google" }
