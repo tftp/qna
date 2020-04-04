@@ -5,7 +5,6 @@ RSpec.shared_examples_for "votable" do
   let!(:vote) { create(:vote, votable: votable, user: user) }
 
   it '#rating' do
-
     expect(votable.rating).to eq(1)
   end
 end
