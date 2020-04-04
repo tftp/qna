@@ -4,7 +4,6 @@ RSpec.shared_examples_for "voted" do
       before { login(user) }
 
       it 'save a new vote for votable' do
-
         expect{ patch :vote, params: { id: votable, option: 'positive' } }.to change(Vote, :count).by(1)
       end
 
@@ -23,7 +22,6 @@ RSpec.shared_examples_for "voted" do
       before { login(author) }
 
       it 'not save a new vote for votable' do
-
         expect{patch :vote, params: { id: votable, option: 'positive' }}.to_not change(Vote, :count)
       end
 

@@ -7,16 +7,10 @@ RSpec.describe 'Answers API', type: :request do
     let(:user) { create(:user) }
     let(:question) { create(:question, user: user) }
     let!(:answer) { create(:answer, question: question, user: user) }
+    let(:api_path) { "/api/v1/questions/#{question.id}/answers/#{answer.id}" }
 
-    context 'unauthorized' do
-      it 'returns 401 status if there is not access_token' do
-        get "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { id: answer.id, question_id: question.id }, headers: headers
-        expect(response.status).to eq 401
-      end
-      it 'returns 401 status if access_token is invalid' do
-        get "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { id: answer.id, question_id: question.id, access_token: '1234' }, headers: headers
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Authorizable Failed' do
+      let(:method) { :get }
     end
 
     context 'authorize' do
@@ -31,14 +25,10 @@ RSpec.describe 'Answers API', type: :request do
         get "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { id: answer.id, question_id: question.id, access_token: access_token.token }, headers: headers
       end
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
-
-      it 'returns all public fields' do
-        %w[id body created_at updated_at user_id].each do |attr|
-          expect(answer_response[attr]).to eq answer.send(attr).as_json
-        end
+      it_behaves_like 'API Authorizable Successful' do
+        let(:object) { answer }
+        let(:object_response) { answer_response }
+        let(:public_fields) { %w[id body created_at updated_at user_id] }
       end
 
       describe 'comments' do
@@ -89,16 +79,10 @@ RSpec.describe 'Answers API', type: :request do
   describe 'POST /api/v1/questions/:question_id/answers' do
     let!(:user) { create(:user) }
     let!(:question) { create(:question, user: user) }
+    let(:api_path) { "/api/v1/questions/#{question.id}/answers" }
 
-    context 'unauthorized' do
-      it 'returns 401 status if there is not access_token' do
-        post "/api/v1/questions/#{question.id}/answers", headers: headers
-        expect(response.status).to eq 401
-      end
-      it 'returns 401 status if access_token is invalid' do
-        post "/api/v1/questions/#{question.id}/answers", params: { access_token: '1234' }, headers: headers
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Authorizable Failed' do
+      let(:method) { :post }
     end
 
     context 'authorize' do
@@ -108,14 +92,10 @@ RSpec.describe 'Answers API', type: :request do
       context 'with correct data' do
         before { post "/api/v1/questions/#{question.id}/answers", params: { access_token: access_token.token, question_id: question, answer: { body: 'Body', links_attributes: [name: 'google', url: 'http://go.com'] } }, headers: headers }
 
-        it 'returns 200 status' do
-          expect(response.status).to eq 200
-        end
-
-        it 'returns all public fields for answer' do
-          %w[body user_id created_at updated_at].each do |attr|
-            expect(answer_response[attr]).to eq assigns(:answer).send(attr).as_json
-          end
+        it_behaves_like 'API Authorizable Successful' do
+          let(:object) { assigns(:answer) }
+          let(:object_response) { answer_response }
+          let(:public_fields) { %w[body user_id created_at updated_at] }
         end
 
         it 'returns all public fields for link of answer' do
@@ -139,16 +119,10 @@ RSpec.describe 'Answers API', type: :request do
     let!(:user) { create(:user) }
     let!(:question) { create(:question, user: user) }
     let!(:answer) { create(:answer, question: question, user: user) }
+    let(:api_path) { "/api/v1/questions/#{question.id}/answers/#{answer.id}" }
 
-    context 'unauthorized' do
-      it 'returns 401 status if there is not access_token' do
-        patch "/api/v1/questions/#{question.id}/answers/#{answer.id}", headers: headers
-        expect(response.status).to eq 401
-      end
-      it 'returns 401 status if access_token is invalid' do
-        patch "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { access_token: '1234' }, headers: headers
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Authorizable Failed' do
+      let(:method) { :patch }
     end
 
     context 'authorize' do
@@ -158,14 +132,10 @@ RSpec.describe 'Answers API', type: :request do
       context 'with correct data' do
         before { patch "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { access_token: access_token.token, answer: { id: answer.id, body: 'Body', links_attributes: [name: 'google', url: 'http://go.com'] } }, headers: headers }
 
-        it 'returns 200 status' do
-          expect(response.status).to eq 200
-        end
-
-        it 'returns all public fields for question' do
-          %w[body user_id created_at updated_at].each do |attr|
-            expect(answer_response[attr]).to eq assigns(:answer).send(attr).as_json
-          end
+        it_behaves_like 'API Authorizable Successful' do
+          let(:object) { assigns(:answer) }
+          let(:object_response) { answer_response }
+          let(:public_fields) { %w[body user_id created_at updated_at] }
         end
 
         it 'returns all public fields for link of answer' do
@@ -198,45 +168,23 @@ RSpec.describe 'Answers API', type: :request do
   describe 'DELETE /api/v1/questions/:question_id/answers/:id' do
     let!(:user) { create(:user) }
     let!(:question) { create(:question, user: user) }
-    let!(:answer) { create(:answer, question: question, user: user) }
-    let!(:other) { create(:user) }
-    let!(:answer_other) { create(:answer, question: question, user: other) }
+    let(:answer) { create(:answer, question: question, user: user) }
+    let(:api_path) { "/api/v1/questions/#{question.id}/answers/#{answer.id}" }
+    let(:method) { :delete }
 
-    context 'unauthorized' do
-      it 'returns 401 status if there is not access_token' do
-        delete "/api/v1/questions/#{question.id}/answers/#{answer.id}", headers: headers
-        expect(response.status).to eq 401
-      end
-      it 'returns 401 status if access_token is invalid' do
-        delete "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { access_token: '1234' }, headers: headers
-        expect(response.status).to eq 401
-      end
-    end
+    it_behaves_like 'API Authorizable Failed'
 
     context 'authorize' do
       let(:access_token) { create(:access_token, resource_owner_id: user.id, scopes: 'write') }
+      let(:other) { create(:user) }
+      let(:answer_other) { create(:answer, question: question, user: other) }
 
-      context 'as author of answer' do
-        it 'delete the answer' do
-          expect{ delete "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { access_token: access_token.token, id: answer }, headers: headers }.to change(Answer, :count).by(-1)
-        end
-
-        it 'returns 204 status' do
-          delete "/api/v1/questions/#{question.id}/answers/#{answer.id}", params: { access_token: access_token.token, id: answer }, headers: headers
-          expect(response.status).to eq 204
-        end
+      it_behaves_like 'API For Destroy' do
+        let(:api_path_other) { "/api/v1/questions/#{question.id}/answers/#{answer_other.id}" }
+        let(:object) { answer }
+        let(:object_other) { answer_other }
       end
 
-      context 'as not author of answer' do
-        it 'can not delete the answer' do
-          expect{ delete "/api/v1/questions/#{question.id}/answers/#{answer_other.id}", params: { access_token: access_token.token, id: answer_other }, headers: headers }.to_not change(Answer, :count)
-        end
-
-        it 'returns 403 status' do
-          delete "/api/v1/questions/#{question.id}/answers/#{answer_other.id}", params: { access_token: access_token.token, id: answer_other }, headers: headers
-          expect(response.status).to eq 403
-        end
-      end
     end
   end
 end
