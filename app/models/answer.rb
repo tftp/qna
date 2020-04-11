@@ -13,6 +13,8 @@ class Answer < ApplicationRecord
   validates :body, presence: true
   validates_uniqueness_of :best, scope: :question_id, if: :best?, on: :update
 
+  after_create :send_notification
+
   def set_as_best!
     return if best?
     self.transaction do
@@ -21,4 +23,9 @@ class Answer < ApplicationRecord
     end
   end
 
+  private
+
+  def send_notification
+    NotificationJob.perform_later(self)
+  end
 end

@@ -24,11 +24,11 @@ RSpec.describe Question, type: :model do
     let!(:question_now) { create(:question) }
     let!(:question_old) { create(:question, :old) }
 
-    it 'count of all questions' do
+    it 'count all questions is correct' do
       expect(Question.count).to eq 2
     end
 
-    it 'count daily questions' do
+    it 'count daily questions is correct' do
       expect(Question.daily.count).to eq 1
     end
   end
