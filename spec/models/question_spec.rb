@@ -19,4 +19,17 @@ RSpec.describe Question, type: :model do
 
     it_behaves_like "votable"
   end
+
+  describe 'daily questions' do
+    let!(:question_now) { create(:question) }
+    let!(:question_old) { create(:question, :old) }
+
+    it 'count of all questions' do
+      expect(Question.count).to eq 2
+    end
+
+    it 'count daily questions' do
+      expect(Question.daily.count).to eq 1
+    end
+  end
 end

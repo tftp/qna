@@ -8,6 +8,8 @@ class Question < ApplicationRecord
 
   has_many_attached :files
 
+  scope :daily, -> { where(created_at: 1.day.ago..Time.current) }
+
   validates :title, :body, presence: true
 
 end
