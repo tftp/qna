@@ -35,7 +35,7 @@ class Ability
 
     # set_rules_for_question
     can :create, Question
-    can [:update, :destroy], Question, user_id: @user.id
+    can [:update, :destroy, :subscribe], Question, user_id: @user.id
     can :vote, Question do |question|
        !@user.is_author?(question)
      end

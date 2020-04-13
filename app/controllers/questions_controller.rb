@@ -30,6 +30,7 @@ class QuestionsController < ApplicationController
     @question = current_user.questions.new(question_params)
 
     if @question.save
+      current_user.subscriptions << @question
       redirect_to @question, notice: 'Your question successfully created'
     else
       render :new
@@ -44,6 +45,15 @@ class QuestionsController < ApplicationController
     authorize! :destroy, question
     question.destroy
     redirect_to root_path
+  end
+
+  def subscribe
+    @question = question
+    if current_user.subscriptions.exists?(@question.id)
+      current_user.subscriptions.destroy(@question.id)
+    else
+      current_user.subscriptions << (@question)
+    end
   end
 
   helper_method :question

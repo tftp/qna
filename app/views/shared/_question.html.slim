@@ -1,6 +1,8 @@
 
 .row
+  = render 'shared/vote', resource: @question
   .col-6 class="alert alert-secondary"
+    p =subscribe_link(@question)
     h2 = @question.title
     p = @question.body
     - if @question.files.attached?

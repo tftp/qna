@@ -1,8 +1,10 @@
 class Services::Notification
-  def send_mail(answer)
+  def preparing_notification(answer)
     @question = answer.question
-    User.where(question: @question).each do |user|
-      NotificationMailer.send(user, answer).deliver_later
+    User.find_each(batch_size: 500) do |user|
+      if user.subscriptions.exists? @question.id
+        NotificationMailer.send_notification(user, answer).deliver_later
+      end
     end
   end
 end

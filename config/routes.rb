@@ -28,6 +28,9 @@ Rails.application.routes.draw do
         patch :best
       end
     end
+    member do
+      patch :subscribe
+    end
   end
 
   resources :questions, concerns: %i[votable commentable]

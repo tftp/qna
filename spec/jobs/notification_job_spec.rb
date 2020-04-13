@@ -11,8 +11,8 @@ RSpec.describe NotificationJob, type: :job do
     allow(Services::Notification).to receive(:new).and_return(service)
   end
 
-  it 'calls Services::Notification#send_mail' do
-    expect(service).to receive(:send_mail).with(answer)
+  it 'calls Services::Notification#preparing_notification' do
+    expect(service).to receive(:preparing_notification).with(answer)
     NotificationJob.perform_now(answer)
   end
 end

@@ -21,4 +21,20 @@ feature 'Emailer' do
       expect(current_email).to_not have_content 'Question old'
     end
   end
+
+  describe 'user can receive mail with new answer of question' do
+    given(:user) { create(:user) }
+    given(:question) { create(:question) }
+    given(:answer) { create(:answer, body: 'This is new answer', question: question) }
+
+    background do
+      clear_emails
+      NotificationMailer.send_notification(user, answer).deliver_now
+      open_email(user.email)
+    end
+
+    scenario 'have it in his mail' do
+      expect(current_email).to have_content answer.body
+    end
+  end
 end
