@@ -28,9 +28,7 @@ Rails.application.routes.draw do
         patch :best
       end
     end
-    member do
-      patch :subscribe
-    end
+    resources :subscriptions, only: [:create, :destroy]
   end
 
   resources :questions, concerns: %i[votable commentable]

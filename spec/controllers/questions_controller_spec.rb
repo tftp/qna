@@ -6,35 +6,6 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question, user: author) }
   let(:question_old) { question }
 
-  describe 'PATCH #subscribe' do
-    context 'as unauthenticate user' do
-      it 'responds with error' do
-        expect(patch :subscribe, params: { id: question }, format: :js).to have_http_status(401)
-      end
-    end
-
-    context 'as authenticate user' do
-      before { login(user) }
-
-      it 'user can subscribe if subscription is not exist' do
-        patch :subscribe, params: { id: question }, format: :js
-        expect(user.subscriptions.count).to eq 1
-      end
-
-      it 'user can unsubscribe if subscription exist' do
-        user.subscriptions << question
-        patch :subscribe, params: { id: question }, format: :js
-        expect(user.subscriptions.count).to eq 0
-
-      end
-
-      it 'renders update view' do
-        patch :subscribe, params: { id: question }, format: :js
-        expect(response).to render_template :subscribe
-      end
-    end
-  end
-
   describe 'Voted' do
     let!(:votable) { question }
     let!(:votable_user) { create(:question, user: user) }

@@ -7,7 +7,8 @@ RSpec.describe User, type: :model do
   it { should have_many(:answers) }
   it { should have_many(:votes) }
   it { should have_many(:authorizations).dependent(:destroy) }
-  it { should have_and_belong_to_many(:subscriptions) }
+  it { should have_many(:subscriptions).dependent(:destroy) }
+  it { should have_many(:subscribe_questions).through(:subscriptions) }
 
   let(:author) { create(:user) }
   let(:somebody) { create(:user) }

@@ -1,0 +1,4 @@
+$('.question-errors').html('<%= j render 'shared/errors', resource: @subscription %>')
+<% if @subscription.persisted? %>
+  $('.question').html('<%= j render 'shared/question', resource: @question %>')
+<% end %>

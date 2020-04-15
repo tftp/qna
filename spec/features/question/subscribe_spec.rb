@@ -26,7 +26,6 @@ feature 'User can subscribe question' do
     end
 
     scenario 'can subscribe' do
-      user.subscriptions << question
       visit question_path(question)
 
       within '.question' do
