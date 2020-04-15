@@ -48,4 +48,13 @@ RSpec.describe Answer, type: :model do
     it_behaves_like "votable"
   end
 
+  describe 'notification' do
+    let(:answer) { build(:answer, question: question, user: author) }
+
+    it 'calls NotificationJob' do
+      expect(NotificationJob).to receive(:perform_later).with(answer)
+      answer.save!
+    end
+  end
+
 end

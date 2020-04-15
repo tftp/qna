@@ -6,7 +6,6 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question, user: author) }
   let(:question_old) { question }
 
-
   describe 'Voted' do
     let!(:votable) { question }
     let!(:votable_user) { create(:question, user: user) }

@@ -5,6 +5,8 @@
       = render 'shared/vote', resource: @question
 
     .col-6.alert.alert-secondary
+      -if user_signed_in?
+        p =subscribe_link(@question)
       h2 = @question.title
       p = @question.body
       - if @question.files.attached?

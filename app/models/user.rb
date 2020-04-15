@@ -11,6 +11,9 @@ class User < ApplicationRecord
  has_many :comments, dependent: :destroy
  has_many :authorizations, dependent: :destroy
 
+ has_many  :subscriptions, dependent: :destroy
+ has_many  :subscribe_questions, through: :subscriptions, source: :question, class_name: "Question"
+
  validates :email, format: { with: /\A\w+@\w+\.[a-z]{2,3}\z/}
 
  def is_author?(obj)

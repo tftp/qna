@@ -1,13 +1,14 @@
 
 .row
   .col-6 class="alert alert-secondary"
+    p =subscribe_link(@question)
     h2 = @question.title
     p = @question.body
     - if @question.files.attached?
       = render @question.files
     = render 'shared/link', resourse: @question
 
-    = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
+    = form_with model: @question, class: 'hidden', html: { id: "edit-question" } do |f|
       .form-group
         = f.label :title, 'Your question title'
         = f.text_field :title, class: 'form-control'
@@ -19,6 +20,6 @@
 
         = f.submit 'Save', class: 'btn btn-secondary btn-sm btn-block'
 
-  - if can?(:update, question)
+  - if can?(:update, @question)
     .col-1 class="alert alert-secondary"
-      = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
+      = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: @question.id }

@@ -33,6 +33,10 @@ class Ability
     # set_rules_for_user_REST_API
     can :create, User
 
+    # set_rules_for_subscription
+    can :create, Subscription
+    can :destroy, Subscription, user_id: @user.id
+
     # set_rules_for_question
     can :create, Question
     can [:update, :destroy], Question, user_id: @user.id
