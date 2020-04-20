@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
+  config.include SphinxHelpers, type: :feature
 
   # DatabaseCleaner settings
   config.before(:suite) do

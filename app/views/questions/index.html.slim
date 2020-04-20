@@ -1,8 +1,9 @@
-= form_with url: search_path, method: :get, local: true do |f|
-  = f.label 'query', "Search for:"
-  = f.text_field 'query'
-  = f.select('model', options_for_select(%w[question answer comment user all]))
-  = f.submit "Search"
+.search-form
+  = form_with url: search_path, method: :get, local: true do |f|
+    = f.label 'query', "Search for:"
+    = f.text_field 'query'
+    = f.select('model', options_for_select(%w[question answer comment user all]))
+    = f.submit "Search"
 
 - if can?(:create, Question)
   p = link_to 'Ask question', new_question_path
