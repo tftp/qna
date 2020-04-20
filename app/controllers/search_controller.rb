@@ -3,7 +3,7 @@ class SearchController < ApplicationController
   skip_authorization_check
 
   def index
-    @result = Foundator.search(params_search, params_model)
+    @result = SearchCenter.search(params_search, params_model)
   end
 
   private
