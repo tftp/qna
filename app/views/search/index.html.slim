@@ -1,0 +1,8 @@
+.search-result
+  - @result.each do |r|
+    - if r.has_attribute? :body
+      p = r.body
+    - if r.has_attribute? :email
+      p = r.email
+
+= link_to 'Back', root_path

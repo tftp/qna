@@ -22,6 +22,8 @@ Rails.application.routes.draw do
 
   resources :attachments, only: :destroy
 
+  get :search, to: "search#index"
+
   resources :questions do
     resources :answers do
       member do
@@ -45,5 +47,4 @@ Rails.application.routes.draw do
       end
     end
   end
-
 end
