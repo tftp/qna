@@ -41,7 +41,7 @@ gem 'cancancan'
 gem 'doorkeeper'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'oj'
-gem 'sidekiq'
+gem 'sidekiq', '<6'
 gem 'sinatra', require: false
 gem 'whenever', require: false
 gem 'mysql2'
