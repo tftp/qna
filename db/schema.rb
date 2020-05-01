@@ -70,8 +70,8 @@ ActiveRecord::Schema.define(version: 2020_04_15_060528) do
   end
 
   create_table "links", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "url", null: false
+    t.string "name"
+    t.string "url"
     t.string "linkable_type"
     t.bigint "linkable_id"
     t.datetime "created_at", precision: 6, null: false
