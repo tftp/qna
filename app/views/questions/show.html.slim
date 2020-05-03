@@ -7,15 +7,17 @@
     .col-6.alert.alert-secondary
       -if user_signed_in?
         p =subscribe_link(@question)
-      h2 = @question.title
-      p = @question.body
-      - if @question.files.attached?
-        = render @question.files
-      = render 'shared/link', resourse: @question
+      - cache @question do
+        h2 = @question.title
+        p = @question.body
+        - if @question.files.attached?
+          = render @question.files
+        = render 'shared/link', resourse: @question
 
-      p Comments:
-      div class="comments-question"
-        = render question.comments
+      - cache ['comments-question', question] do
+        p Comments:
+        div class="comments-question"
+          = render question.comments
 
       - if can?(:create, Comment)
         .errors-comment-question-form
@@ -38,7 +40,6 @@
       .col-1.alert.alert-secondary
         p= link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
         p= link_to 'Delete', question_path(question), method: :delete
-
 
 .answers
   = render @question.answers.with_attached_files

@@ -7,12 +7,13 @@
 
   .col-4 class="alert alert-secondary"
     = content_tag :span, class: 'answer', data: { answer_id: answer.id }
-      = answer.body
-      = render 'shared/link', resourse: answer
+      - cache answer do
+        = answer.body
+        = render 'shared/link', resourse: answer
 
-      p Comments:
-      div class="comments-answer-#{answer.id}"
-        = render answer.comments
+        p Comments:
+        div class="comments-answer-#{answer.id}"
+          = render answer.comments
 
       - if can?(:create, Comment)
         div class="errors-comment-answer-form-#{answer.id}"
